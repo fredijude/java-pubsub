@@ -619,6 +619,38 @@ public class Publisher implements PublisherInterface {
   }
 
   /**
+   * Cancels all outstanding batches.
+   */
+  public void cancelAllOutstanding() {
+    messagesBatchLock.lock();
+    try {
+      messagesWaiter.incrementPendingCount(-messagesBatches.size());
+      messagesBatches.clear();
+    } finally {
+      messagesBatchLock.unlock();
+    }
+  }
+
+  /**
+   * Immediately shuts down the publisher without waiting for pending messages to
+   * be published.
+   * Cancels all pending messages and releases resources.
+   */
+  public void shutdownNow() {
+    Preconditions.checkState(
+      !shutdown.getAndSet(true), "Cannot shut down a publisher already shut-down.");
+    if (currentAlarmFuture != null && activeAlarm.getAndSet(false)) {
+      currentAlarmFuture.cancel(false);
+    }
+    if (executor != null && !executor.isShutdown()) {
+      executor.shutdownNow();
+    }
+    cancelAllOutstanding();
+    backgroundResources.shutdown();
+  }
+
+
+  /**
    * Wait for all work has completed execution after a {@link #shutdown()} request, or the timeout
    * occurs, or the current thread is interrupted.
    *
