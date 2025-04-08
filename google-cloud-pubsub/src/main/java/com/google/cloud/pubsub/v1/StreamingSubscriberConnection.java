@@ -47,9 +47,12 @@ import com.google.pubsub.v1.AcknowledgeRequest;
 import com.google.pubsub.v1.ModifyAckDeadlineRequest;
 import com.google.pubsub.v1.StreamingPullRequest;
 import com.google.pubsub.v1.StreamingPullResponse;
+import com.google.pubsub.v1.SubscriptionName;
 import com.google.rpc.ErrorInfo;
 import io.grpc.Status;
 import io.grpc.protobuf.StatusProto;
+import io.opentelemetry.api.trace.Span;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -67,7 +70,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nullable;
-import org.threeten.bp.Duration;
 
 /** Implementation of {@link AckProcessor} based on Cloud Pub/Sub streaming pull. */
 final class StreamingSubscriberConnection extends AbstractApiService implements AckProcessor {
@@ -93,6 +95,7 @@ final class StreamingSubscriberConnection extends AbstractApiService implements 
   private final SubscriberStub subscriberStub;
   private final int channelAffinity;
   private final String subscription;
+  private final SubscriptionName subscriptionNameObject;
   private final ScheduledExecutorService systemExecutor;
   private final MessageDispatcher messageDispatcher;
 
@@ -118,8 +121,12 @@ final class StreamingSubscriberConnection extends AbstractApiService implements 
    */
   private final String clientId = UUID.randomUUID().toString();
 
+  private final boolean enableOpenTelemetryTracing;
+  private OpenTelemetryPubsubTracer tracer = new OpenTelemetryPubsubTracer(null, false);
+
   private StreamingSubscriberConnection(Builder builder) {
     subscription = builder.subscription;
+    subscriptionNameObject = SubscriptionName.parse(builder.subscription);
     systemExecutor = builder.systemExecutor;
 
     // We need to set the default stream ack deadline on the initial request, this will be
@@ -151,6 +158,11 @@ final class StreamingSubscriberConnection extends AbstractApiService implements 
       messageDispatcherBuilder = MessageDispatcher.newBuilder(builder.receiverWithAckResponse);
     }
 
+    enableOpenTelemetryTracing = builder.enableOpenTelemetryTracing;
+    if (builder.tracer != null) {
+      tracer = builder.tracer;
+    }
+
     messageDispatcher =
         messageDispatcherBuilder
             .setAckProcessor(this)
@@ -165,6 +177,9 @@ final class StreamingSubscriberConnection extends AbstractApiService implements 
             .setExecutor(builder.executor)
             .setSystemExecutor(builder.systemExecutor)
             .setApiClock(builder.clock)
+            .setSubscriptionName(subscription)
+            .setEnableOpenTelemetryTracing(enableOpenTelemetryTracing)
+            .setTracer(tracer)
             .build();
 
     flowControlSettings = builder.flowControlSettings;
@@ -191,15 +206,14 @@ final class StreamingSubscriberConnection extends AbstractApiService implements 
 
   @Override
   protected void doStop() {
-    runShutdown();
-
     lock.lock();
     try {
       clientStream.closeSendWithError(Status.CANCELLED.asException());
     } finally {
       lock.unlock();
-      notifyStopped();
     }
+    runShutdown();
+    notifyStopped();
   }
 
   private void runShutdown() {
@@ -237,9 +251,12 @@ final class StreamingSubscriberConnection extends AbstractApiService implements 
 
       boolean exactlyOnceDeliveryEnabledResponse =
           response.getSubscriptionProperties().getExactlyOnceDeliveryEnabled();
+      boolean messageOrderingEnabledResponse =
+          response.getSubscriptionProperties().getMessageOrderingEnabled();
 
       setExactlyOnceDeliveryEnabled(exactlyOnceDeliveryEnabledResponse);
       messageDispatcher.setExactlyOnceDeliveryEnabled(exactlyOnceDeliveryEnabledResponse);
+      messageDispatcher.setMessageOrderingEnabled(messageOrderingEnabledResponse);
       messageDispatcher.processReceivedMessages(response.getReceivedMessagesList());
 
       // Only request more if we're not shutdown.
@@ -391,21 +408,7 @@ final class StreamingSubscriberConnection extends AbstractApiService implements 
     AckResponse ackResponse;
 
     if (getExactlyOnceDeliveryEnabled()) {
-      if (!(t instanceof ApiException)) {
-        ackResponse = AckResponse.OTHER;
-      }
-
-      ApiException apiException = (ApiException) t;
-      switch (apiException.getStatusCode().getCode()) {
-        case FAILED_PRECONDITION:
-          ackResponse = AckResponse.FAILED_PRECONDITION;
-          break;
-        case PERMISSION_DENIED:
-          ackResponse = AckResponse.PERMISSION_DENIED;
-          break;
-        default:
-          ackResponse = AckResponse.OTHER;
-      }
+      ackResponse = StatusUtil.getFailedAckResponse(t);
     } else {
       // We should set success regardless if ExactlyOnceDelivery is not enabled
       ackResponse = AckResponse.SUCCESSFUL;
@@ -430,15 +433,20 @@ final class StreamingSubscriberConnection extends AbstractApiService implements 
     for (List<AckRequestData> ackRequestDataInRequestList :
         Lists.partition(ackRequestDataList, MAX_PER_REQUEST_CHANGES)) {
       List<String> ackIdsInRequest = new ArrayList<>();
+      List<PubsubMessageWrapper> messagesInRequest = new ArrayList<>();
       for (AckRequestData ackRequestData : ackRequestDataInRequestList) {
         ackIdsInRequest.add(ackRequestData.getAckId());
+        messagesInRequest.add(ackRequestData.getMessageWrapper());
         if (ackRequestData.hasMessageFuture()) {
           // Add to our pending requests if we care about the response
           pendingRequests.add(ackRequestData);
         }
       }
+      // Creates an Ack span to be passed to the callback
+      Span rpcSpan =
+          tracer.startSubscribeRpcSpan(subscriptionNameObject, "ack", messagesInRequest, 0, false);
       ApiFutureCallback<Empty> callback =
-          getCallback(ackRequestDataInRequestList, 0, false, currentBackoffMillis);
+          getCallback(ackRequestDataInRequestList, 0, false, currentBackoffMillis, rpcSpan);
       ApiFuture<Empty> ackFuture =
           subscriberStub
               .acknowledgeCallable()
@@ -461,19 +469,32 @@ final class StreamingSubscriberConnection extends AbstractApiService implements 
       for (List<AckRequestData> ackRequestDataInRequestList :
           Lists.partition(modackRequestData.getAckRequestData(), MAX_PER_REQUEST_CHANGES)) {
         List<String> ackIdsInRequest = new ArrayList<>();
+        List<PubsubMessageWrapper> messagesInRequest = new ArrayList<>();
         for (AckRequestData ackRequestData : ackRequestDataInRequestList) {
           ackIdsInRequest.add(ackRequestData.getAckId());
+          messagesInRequest.add(ackRequestData.getMessageWrapper());
           if (ackRequestData.hasMessageFuture()) {
             // Add to our pending requests if we care about the response
             pendingRequests.add(ackRequestData);
           }
         }
+        int deadlineExtensionSeconds = modackRequestData.getDeadlineExtensionSeconds();
+        String rpcOperation = deadlineExtensionSeconds == 0 ? "nack" : "modack";
+        // Creates either a ModAck span or a Nack span depending on the given ack deadline
+        Span rpcSpan =
+            tracer.startSubscribeRpcSpan(
+                subscriptionNameObject,
+                rpcOperation,
+                messagesInRequest,
+                deadlineExtensionSeconds,
+                modackRequestData.getIsReceiptModack());
         ApiFutureCallback<Empty> callback =
             getCallback(
-                modackRequestData.getAckRequestData(),
-                modackRequestData.getDeadlineExtensionSeconds(),
+                ackRequestDataInRequestList,
+                deadlineExtensionSeconds,
                 true,
-                currentBackoffMillis);
+                currentBackoffMillis,
+                rpcSpan);
         ApiFuture<Empty> modackFuture =
             subscriberStub
                 .modifyAckDeadlineCallable()
@@ -515,21 +536,36 @@ final class StreamingSubscriberConnection extends AbstractApiService implements 
       List<AckRequestData> ackRequestDataList,
       int deadlineExtensionSeconds,
       boolean isModack,
-      long currentBackoffMillis) {
+      long currentBackoffMillis,
+      Span rpcSpan) {
     // This callback handles retries, and sets message futures
 
     // Check if ack or nack
     boolean setResponseOnSuccess = (!isModack || (deadlineExtensionSeconds == 0)) ? true : false;
 
+    boolean rpcSpanSampled = rpcSpan == null ? false : rpcSpan.getSpanContext().isSampled();
+
     return new ApiFutureCallback<Empty>() {
       @Override
       public void onSuccess(Empty empty) {
         ackOperationsWaiter.incrementPendingCount(-1);
+
+        tracer.endSubscribeRpcSpan(rpcSpan);
+
         for (AckRequestData ackRequestData : ackRequestDataList) {
           // This will check if a response is needed, and if it has already been set
           ackRequestData.setResponse(AckResponse.SUCCESSFUL, setResponseOnSuccess);
+          messageDispatcher.notifyAckSuccess(ackRequestData);
           // Remove from our pending operations
           pendingRequests.remove(ackRequestData);
+          tracer.addEndRpcEvent(
+              ackRequestData.getMessageWrapper(),
+              rpcSpanSampled,
+              isModack,
+              deadlineExtensionSeconds);
+          if (!isModack || deadlineExtensionSeconds == 0) {
+            tracer.endSubscriberSpan(ackRequestData.getMessageWrapper());
+          }
         }
       }
 
@@ -541,40 +577,111 @@ final class StreamingSubscriberConnection extends AbstractApiService implements 
         Level level = isAlive() ? Level.WARNING : Level.FINER;
         logger.log(level, "failed to send operations", t);
 
+        tracer.setSubscribeRpcSpanException(rpcSpan, isModack, deadlineExtensionSeconds, t);
+
         if (!getExactlyOnceDeliveryEnabled()) {
+          if (enableOpenTelemetryTracing) {
+            for (AckRequestData ackRequestData : ackRequestDataList) {
+              tracer.addEndRpcEvent(
+                  ackRequestData.getMessageWrapper(),
+                  rpcSpanSampled,
+                  isModack,
+                  deadlineExtensionSeconds);
+              if (!isModack || deadlineExtensionSeconds == 0) {
+                tracer.endSubscriberSpan(ackRequestData.getMessageWrapper());
+              }
+            }
+          }
           return;
         }
-
         List<AckRequestData> ackRequestDataArrayRetryList = new ArrayList<>();
         try {
           Map<String, String> metadataMap = getMetadataMapFromThrowable(t);
-          ackRequestDataList.forEach(
-              ackRequestData -> {
-                String ackId = ackRequestData.getAckId();
-                if (metadataMap.containsKey(ackId)) {
-                  // An error occured
-                  String errorMessage = metadataMap.get(ackId);
-                  if (errorMessage.startsWith(TRANSIENT_FAILURE_METADATA_PREFIX)) {
-                    // Retry all "TRANSIENT_*" error messages - do not set message future
-                    logger.log(Level.INFO, "Transient error message, will resend", errorMessage);
-                    ackRequestDataArrayRetryList.add(ackRequestData);
-                  } else if (errorMessage.equals(PERMANENT_FAILURE_INVALID_ACK_ID_METADATA)) {
-                    // Permanent failure, send
-                    logger.log(
-                        Level.INFO,
-                        "Permanent error invalid ack id message, will not resend",
-                        errorMessage);
-                    ackRequestData.setResponse(AckResponse.INVALID, setResponseOnSuccess);
+          if (metadataMap.isEmpty()) {
+            String operation = isModack ? "ModifyAckDeadline" : "Acknowledge";
+            if (!StatusUtil.isRetryable(t)) {
+              logger.log(Level.WARNING, "Un-retryable error on " + operation, t);
+              ackRequestDataList.forEach(
+                  ackRequestData -> {
+                    AckResponse failedAckResponse = StatusUtil.getFailedAckResponse(t);
+                    ackRequestData.setResponse(failedAckResponse, setResponseOnSuccess);
+                    messageDispatcher.notifyAckFailed(ackRequestData);
+                    tracer.addEndRpcEvent(
+                        ackRequestData.getMessageWrapper(),
+                        rpcSpanSampled,
+                        isModack,
+                        deadlineExtensionSeconds);
+                    tracer.setSubscriberSpanException(
+                        ackRequestData.getMessageWrapper(), t, "Error with no metadata map");
+                    ackRequestData
+                        .getMessageWrapper()
+                        .setSubscriberSpanException(t, "Error with no metadata map");
+                    pendingRequests.remove(ackRequestData);
+                  });
+            } else {
+              logger.log(Level.INFO, "Retryable error on " + operation + ", will resend", t);
+              ackRequestDataArrayRetryList.addAll(ackRequestDataList);
+              ackRequestDataList.forEach(
+                  ackRequestData -> {
+                    pendingRequests.remove(ackRequestData);
+                  });
+            }
+          } else {
+            ackRequestDataList.forEach(
+                ackRequestData -> {
+                  String ackId = ackRequestData.getAckId();
+                  if (metadataMap.containsKey(ackId)) {
+                    // An error occured
+                    String errorMessage = metadataMap.get(ackId);
+                    if (errorMessage.startsWith(TRANSIENT_FAILURE_METADATA_PREFIX)) {
+                      // Retry all "TRANSIENT_*" error messages - do not set message future
+                      logger.log(Level.INFO, "Transient error message, will resend", errorMessage);
+                      ackRequestDataArrayRetryList.add(ackRequestData);
+                    } else if (errorMessage.equals(PERMANENT_FAILURE_INVALID_ACK_ID_METADATA)) {
+                      // Permanent failure
+                      logger.log(
+                          Level.INFO,
+                          "Permanent error invalid ack id message, will not resend",
+                          errorMessage);
+                      ackRequestData.setResponse(AckResponse.INVALID, setResponseOnSuccess);
+                      messageDispatcher.notifyAckFailed(ackRequestData);
+                      tracer.addEndRpcEvent(
+                          ackRequestData.getMessageWrapper(),
+                          rpcSpanSampled,
+                          isModack,
+                          deadlineExtensionSeconds);
+                      tracer.setSubscriberSpanException(
+                          ackRequestData.getMessageWrapper(), t, "Invalid ack ID");
+                    } else {
+                      logger.log(
+                          Level.INFO, "Unknown error message, will not resend", errorMessage);
+                      ackRequestData.setResponse(AckResponse.OTHER, setResponseOnSuccess);
+                      messageDispatcher.notifyAckFailed(ackRequestData);
+                      tracer.addEndRpcEvent(
+                          ackRequestData.getMessageWrapper(),
+                          rpcSpanSampled,
+                          isModack,
+                          deadlineExtensionSeconds);
+                      tracer.setSubscriberSpanException(
+                          ackRequestData.getMessageWrapper(), t, "Unknown error message");
+                      ackRequestData
+                          .getMessageWrapper()
+                          .setSubscriberSpanException(t, "Unknown error message");
+                    }
                   } else {
-                    logger.log(Level.INFO, "Unknown error message, will not resend", errorMessage);
-                    ackRequestData.setResponse(AckResponse.OTHER, setResponseOnSuccess);
+                    ackRequestData.setResponse(AckResponse.SUCCESSFUL, setResponseOnSuccess);
+                    messageDispatcher.notifyAckSuccess(ackRequestData);
+                    tracer.endSubscriberSpan(ackRequestData.getMessageWrapper());
+                    tracer.addEndRpcEvent(
+                        ackRequestData.getMessageWrapper(),
+                        rpcSpanSampled,
+                        isModack,
+                        deadlineExtensionSeconds);
                   }
-                } else {
-                  ackRequestData.setResponse(AckResponse.SUCCESSFUL, setResponseOnSuccess);
-                }
-                // Remove from our pending
-                pendingRequests.remove(ackRequestData);
-              });
+                  // Remove from our pending
+                  pendingRequests.remove(ackRequestData);
+                });
+          }
         } catch (InvalidProtocolBufferException e) {
           // If we fail to parse out the errorInfo, we should retry all
           logger.log(
@@ -630,6 +737,9 @@ final class StreamingSubscriberConnection extends AbstractApiService implements 
     private ScheduledExecutorService executor;
     private ScheduledExecutorService systemExecutor;
     private ApiClock clock;
+
+    private boolean enableOpenTelemetryTracing;
+    private OpenTelemetryPubsubTracer tracer;
 
     protected Builder(MessageReceiver receiver) {
       this.receiver = receiver;
@@ -718,6 +828,16 @@ final class StreamingSubscriberConnection extends AbstractApiService implements 
 
     public Builder setClock(ApiClock clock) {
       this.clock = clock;
+      return this;
+    }
+
+    public Builder setEnableOpenTelemetryTracing(boolean enableOpenTelemetryTracing) {
+      this.enableOpenTelemetryTracing = enableOpenTelemetryTracing;
+      return this;
+    }
+
+    public Builder setTracer(OpenTelemetryPubsubTracer tracer) {
+      this.tracer = tracer;
       return this;
     }
 

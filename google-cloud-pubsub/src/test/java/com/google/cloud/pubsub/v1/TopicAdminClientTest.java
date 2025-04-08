@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Google LLC
+ * Copyright 2025 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,6 +45,7 @@ import com.google.pubsub.v1.DeleteTopicRequest;
 import com.google.pubsub.v1.DetachSubscriptionRequest;
 import com.google.pubsub.v1.DetachSubscriptionResponse;
 import com.google.pubsub.v1.GetTopicRequest;
+import com.google.pubsub.v1.IngestionDataSourceSettings;
 import com.google.pubsub.v1.ListTopicSnapshotsRequest;
 import com.google.pubsub.v1.ListTopicSnapshotsResponse;
 import com.google.pubsub.v1.ListTopicSubscriptionsRequest;
@@ -52,6 +53,7 @@ import com.google.pubsub.v1.ListTopicSubscriptionsResponse;
 import com.google.pubsub.v1.ListTopicsRequest;
 import com.google.pubsub.v1.ListTopicsResponse;
 import com.google.pubsub.v1.MessageStoragePolicy;
+import com.google.pubsub.v1.MessageTransform;
 import com.google.pubsub.v1.ProjectName;
 import com.google.pubsub.v1.PublishRequest;
 import com.google.pubsub.v1.PublishResponse;
@@ -129,6 +131,8 @@ public class TopicAdminClientTest {
             .setSchemaSettings(SchemaSettings.newBuilder().build())
             .setSatisfiesPzs(true)
             .setMessageRetentionDuration(Duration.newBuilder().build())
+            .setIngestionDataSourceSettings(IngestionDataSourceSettings.newBuilder().build())
+            .addAllMessageTransforms(new ArrayList<MessageTransform>())
             .build();
     mockPublisher.addResponse(expectedResponse);
 
@@ -173,6 +177,8 @@ public class TopicAdminClientTest {
             .setSchemaSettings(SchemaSettings.newBuilder().build())
             .setSatisfiesPzs(true)
             .setMessageRetentionDuration(Duration.newBuilder().build())
+            .setIngestionDataSourceSettings(IngestionDataSourceSettings.newBuilder().build())
+            .addAllMessageTransforms(new ArrayList<MessageTransform>())
             .build();
     mockPublisher.addResponse(expectedResponse);
 
@@ -217,24 +223,23 @@ public class TopicAdminClientTest {
             .setSchemaSettings(SchemaSettings.newBuilder().build())
             .setSatisfiesPzs(true)
             .setMessageRetentionDuration(Duration.newBuilder().build())
+            .setIngestionDataSourceSettings(IngestionDataSourceSettings.newBuilder().build())
+            .addAllMessageTransforms(new ArrayList<MessageTransform>())
             .build();
     mockPublisher.addResponse(expectedResponse);
 
-    UpdateTopicRequest request =
-        UpdateTopicRequest.newBuilder()
-            .setTopic(Topic.newBuilder().build())
-            .setUpdateMask(FieldMask.newBuilder().build())
-            .build();
+    Topic topic = Topic.newBuilder().build();
+    FieldMask updateMask = FieldMask.newBuilder().build();
 
-    Topic actualResponse = client.updateTopic(request);
+    Topic actualResponse = client.updateTopic(topic, updateMask);
     Assert.assertEquals(expectedResponse, actualResponse);
 
     List<AbstractMessage> actualRequests = mockPublisher.getRequests();
     Assert.assertEquals(1, actualRequests.size());
     UpdateTopicRequest actualRequest = ((UpdateTopicRequest) actualRequests.get(0));
 
-    Assert.assertEquals(request.getTopic(), actualRequest.getTopic());
-    Assert.assertEquals(request.getUpdateMask(), actualRequest.getUpdateMask());
+    Assert.assertEquals(topic, actualRequest.getTopic());
+    Assert.assertEquals(updateMask, actualRequest.getUpdateMask());
     Assert.assertTrue(
         channelProvider.isHeaderSent(
             ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
@@ -247,12 +252,9 @@ public class TopicAdminClientTest {
     mockPublisher.addException(exception);
 
     try {
-      UpdateTopicRequest request =
-          UpdateTopicRequest.newBuilder()
-              .setTopic(Topic.newBuilder().build())
-              .setUpdateMask(FieldMask.newBuilder().build())
-              .build();
-      client.updateTopic(request);
+      Topic topic = Topic.newBuilder().build();
+      FieldMask updateMask = FieldMask.newBuilder().build();
+      client.updateTopic(topic, updateMask);
       Assert.fail("No exception raised");
     } catch (InvalidArgumentException e) {
       // Expected exception.
@@ -348,6 +350,8 @@ public class TopicAdminClientTest {
             .setSchemaSettings(SchemaSettings.newBuilder().build())
             .setSatisfiesPzs(true)
             .setMessageRetentionDuration(Duration.newBuilder().build())
+            .setIngestionDataSourceSettings(IngestionDataSourceSettings.newBuilder().build())
+            .addAllMessageTransforms(new ArrayList<MessageTransform>())
             .build();
     mockPublisher.addResponse(expectedResponse);
 
@@ -392,6 +396,8 @@ public class TopicAdminClientTest {
             .setSchemaSettings(SchemaSettings.newBuilder().build())
             .setSatisfiesPzs(true)
             .setMessageRetentionDuration(Duration.newBuilder().build())
+            .setIngestionDataSourceSettings(IngestionDataSourceSettings.newBuilder().build())
+            .addAllMessageTransforms(new ArrayList<MessageTransform>())
             .build();
     mockPublisher.addResponse(expectedResponse);
 

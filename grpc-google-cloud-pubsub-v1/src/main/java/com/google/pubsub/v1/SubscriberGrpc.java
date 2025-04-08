@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2025 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ public final class SubscriberGrpc {
 
   private SubscriberGrpc() {}
 
-  public static final String SERVICE_NAME = "google.pubsub.v1.Subscriber";
+  public static final java.lang.String SERVICE_NAME = "google.pubsub.v1.Subscriber";
 
   // Static method descriptors that strictly reflect the proto.
   private static volatile io.grpc.MethodDescriptor<
@@ -735,25 +735,25 @@ public final class SubscriberGrpc {
    * establishing a bi-directional stream using the `StreamingPull` method.
    * </pre>
    */
-  public abstract static class SubscriberImplBase implements io.grpc.BindableService {
+  public interface AsyncService {
 
     /**
      *
      *
      * <pre>
      * Creates a subscription to a given topic. See the [resource name rules]
-     * (https://cloud.google.com/pubsub/docs/admin#resource_names).
+     * (https://cloud.google.com/pubsub/docs/pubsub-basics#resource_names).
      * If the subscription already exists, returns `ALREADY_EXISTS`.
      * If the corresponding topic doesn't exist, returns `NOT_FOUND`.
      * If the name is not provided in the request, the server will assign a random
      * name for this subscription on the same project as the topic, conforming
      * to the [resource name format]
-     * (https://cloud.google.com/pubsub/docs/admin#resource_names). The generated
-     * name is populated in the returned Subscription object. Note that for REST
-     * API requests, you must specify a name in the request.
+     * (https://cloud.google.com/pubsub/docs/pubsub-basics#resource_names). The
+     * generated name is populated in the returned Subscription object. Note that
+     * for REST API requests, you must specify a name in the request.
      * </pre>
      */
-    public void createSubscription(
+    default void createSubscription(
         com.google.pubsub.v1.Subscription request,
         io.grpc.stub.StreamObserver<com.google.pubsub.v1.Subscription> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(
@@ -767,7 +767,7 @@ public final class SubscriberGrpc {
      * Gets the configuration details of a subscription.
      * </pre>
      */
-    public void getSubscription(
+    default void getSubscription(
         com.google.pubsub.v1.GetSubscriptionRequest request,
         io.grpc.stub.StreamObserver<com.google.pubsub.v1.Subscription> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(
@@ -778,11 +778,12 @@ public final class SubscriberGrpc {
      *
      *
      * <pre>
-     * Updates an existing subscription. Note that certain properties of a
-     * subscription, such as its topic, are not modifiable.
+     * Updates an existing subscription by updating the fields specified in the
+     * update mask. Note that certain properties of a subscription, such as its
+     * topic, are not modifiable.
      * </pre>
      */
-    public void updateSubscription(
+    default void updateSubscription(
         com.google.pubsub.v1.UpdateSubscriptionRequest request,
         io.grpc.stub.StreamObserver<com.google.pubsub.v1.Subscription> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(
@@ -796,7 +797,7 @@ public final class SubscriberGrpc {
      * Lists matching subscriptions.
      * </pre>
      */
-    public void listSubscriptions(
+    default void listSubscriptions(
         com.google.pubsub.v1.ListSubscriptionsRequest request,
         io.grpc.stub.StreamObserver<com.google.pubsub.v1.ListSubscriptionsResponse>
             responseObserver) {
@@ -815,7 +816,7 @@ public final class SubscriberGrpc {
      * subscription or its topic unless the same topic is specified.
      * </pre>
      */
-    public void deleteSubscription(
+    default void deleteSubscription(
         com.google.pubsub.v1.DeleteSubscriptionRequest request,
         io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(
@@ -833,7 +834,7 @@ public final class SubscriberGrpc {
      * subscription-level `ackDeadlineSeconds` used for subsequent messages.
      * </pre>
      */
-    public void modifyAckDeadline(
+    default void modifyAckDeadline(
         com.google.pubsub.v1.ModifyAckDeadlineRequest request,
         io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(
@@ -852,7 +853,7 @@ public final class SubscriberGrpc {
      * than once will not result in an error.
      * </pre>
      */
-    public void acknowledge(
+    default void acknowledge(
         com.google.pubsub.v1.AcknowledgeRequest request,
         io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(
@@ -863,12 +864,10 @@ public final class SubscriberGrpc {
      *
      *
      * <pre>
-     * Pulls messages from the server. The server may return `UNAVAILABLE` if
-     * there are too many concurrent pull requests pending for the given
-     * subscription.
+     * Pulls messages from the server.
      * </pre>
      */
-    public void pull(
+    default void pull(
         com.google.pubsub.v1.PullRequest request,
         io.grpc.stub.StreamObserver<com.google.pubsub.v1.PullResponse> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getPullMethod(), responseObserver);
@@ -887,7 +886,7 @@ public final class SubscriberGrpc {
      * underlying RPC channel.
      * </pre>
      */
-    public io.grpc.stub.StreamObserver<com.google.pubsub.v1.StreamingPullRequest> streamingPull(
+    default io.grpc.stub.StreamObserver<com.google.pubsub.v1.StreamingPullRequest> streamingPull(
         io.grpc.stub.StreamObserver<com.google.pubsub.v1.StreamingPullResponse> responseObserver) {
       return io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall(
           getStreamingPullMethod(), responseObserver);
@@ -904,7 +903,7 @@ public final class SubscriberGrpc {
      * continuously through the call regardless of changes to the `PushConfig`.
      * </pre>
      */
-    public void modifyPushConfig(
+    default void modifyPushConfig(
         com.google.pubsub.v1.ModifyPushConfigRequest request,
         io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(
@@ -916,13 +915,13 @@ public final class SubscriberGrpc {
      *
      * <pre>
      * Gets the configuration details of a snapshot. Snapshots are used in
-     * &lt;a href="https://cloud.google.com/pubsub/docs/replay-overview"&gt;Seek&lt;/a&gt;
-     * operations, which allow you to manage message acknowledgments in bulk. That
-     * is, you can set the acknowledgment state of messages in an existing
-     * subscription to the state captured by a snapshot.
+     * [Seek](https://cloud.google.com/pubsub/docs/replay-overview) operations,
+     * which allow you to manage message acknowledgments in bulk. That is, you can
+     * set the acknowledgment state of messages in an existing subscription to the
+     * state captured by a snapshot.
      * </pre>
      */
-    public void getSnapshot(
+    default void getSnapshot(
         com.google.pubsub.v1.GetSnapshotRequest request,
         io.grpc.stub.StreamObserver<com.google.pubsub.v1.Snapshot> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(
@@ -940,7 +939,7 @@ public final class SubscriberGrpc {
      * state captured by a snapshot.
      * </pre>
      */
-    public void listSnapshots(
+    default void listSnapshots(
         com.google.pubsub.v1.ListSnapshotsRequest request,
         io.grpc.stub.StreamObserver<com.google.pubsub.v1.ListSnapshotsResponse> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(
@@ -964,12 +963,12 @@ public final class SubscriberGrpc {
      * the request, the server will assign a random
      * name for this snapshot on the same project as the subscription, conforming
      * to the [resource name format]
-     * (https://cloud.google.com/pubsub/docs/admin#resource_names). The
+     * (https://cloud.google.com/pubsub/docs/pubsub-basics#resource_names). The
      * generated name is populated in the returned Snapshot object. Note that for
      * REST API requests, you must specify a name in the request.
      * </pre>
      */
-    public void createSnapshot(
+    default void createSnapshot(
         com.google.pubsub.v1.CreateSnapshotRequest request,
         io.grpc.stub.StreamObserver<com.google.pubsub.v1.Snapshot> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(
@@ -980,15 +979,15 @@ public final class SubscriberGrpc {
      *
      *
      * <pre>
-     * Updates an existing snapshot. Snapshots are used in
-     * &lt;a href="https://cloud.google.com/pubsub/docs/replay-overview"&gt;Seek&lt;/a&gt;
-     * operations, which allow
-     * you to manage message acknowledgments in bulk. That is, you can set the
-     * acknowledgment state of messages in an existing subscription to the state
-     * captured by a snapshot.
+     * Updates an existing snapshot by updating the fields specified in the update
+     * mask. Snapshots are used in
+     * [Seek](https://cloud.google.com/pubsub/docs/replay-overview) operations,
+     * which allow you to manage message acknowledgments in bulk. That is, you can
+     * set the acknowledgment state of messages in an existing subscription to the
+     * state captured by a snapshot.
      * </pre>
      */
-    public void updateSnapshot(
+    default void updateSnapshot(
         com.google.pubsub.v1.UpdateSnapshotRequest request,
         io.grpc.stub.StreamObserver<com.google.pubsub.v1.Snapshot> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(
@@ -1010,7 +1009,7 @@ public final class SubscriberGrpc {
      * snapshot or its subscription, unless the same subscription is specified.
      * </pre>
      */
-    public void deleteSnapshot(
+    default void deleteSnapshot(
         com.google.pubsub.v1.DeleteSnapshotRequest request,
         io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(
@@ -1030,118 +1029,32 @@ public final class SubscriberGrpc {
      * snapshot must be on the same topic.
      * </pre>
      */
-    public void seek(
+    default void seek(
         com.google.pubsub.v1.SeekRequest request,
         io.grpc.stub.StreamObserver<com.google.pubsub.v1.SeekResponse> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getSeekMethod(), responseObserver);
     }
+  }
+
+  /**
+   * Base class for the server implementation of the service Subscriber.
+   *
+   * <pre>
+   * The service that an application uses to manipulate subscriptions and to
+   * consume messages from a subscription via the `Pull` method or by
+   * establishing a bi-directional stream using the `StreamingPull` method.
+   * </pre>
+   */
+  public abstract static class SubscriberImplBase implements io.grpc.BindableService, AsyncService {
 
     @java.lang.Override
     public final io.grpc.ServerServiceDefinition bindService() {
-      return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
-          .addMethod(
-              getCreateSubscriptionMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.pubsub.v1.Subscription, com.google.pubsub.v1.Subscription>(
-                      this, METHODID_CREATE_SUBSCRIPTION)))
-          .addMethod(
-              getGetSubscriptionMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.pubsub.v1.GetSubscriptionRequest,
-                      com.google.pubsub.v1.Subscription>(this, METHODID_GET_SUBSCRIPTION)))
-          .addMethod(
-              getUpdateSubscriptionMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.pubsub.v1.UpdateSubscriptionRequest,
-                      com.google.pubsub.v1.Subscription>(this, METHODID_UPDATE_SUBSCRIPTION)))
-          .addMethod(
-              getListSubscriptionsMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.pubsub.v1.ListSubscriptionsRequest,
-                      com.google.pubsub.v1.ListSubscriptionsResponse>(
-                      this, METHODID_LIST_SUBSCRIPTIONS)))
-          .addMethod(
-              getDeleteSubscriptionMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.pubsub.v1.DeleteSubscriptionRequest, com.google.protobuf.Empty>(
-                      this, METHODID_DELETE_SUBSCRIPTION)))
-          .addMethod(
-              getModifyAckDeadlineMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.pubsub.v1.ModifyAckDeadlineRequest, com.google.protobuf.Empty>(
-                      this, METHODID_MODIFY_ACK_DEADLINE)))
-          .addMethod(
-              getAcknowledgeMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.pubsub.v1.AcknowledgeRequest, com.google.protobuf.Empty>(
-                      this, METHODID_ACKNOWLEDGE)))
-          .addMethod(
-              getPullMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.pubsub.v1.PullRequest, com.google.pubsub.v1.PullResponse>(
-                      this, METHODID_PULL)))
-          .addMethod(
-              getStreamingPullMethod(),
-              io.grpc.stub.ServerCalls.asyncBidiStreamingCall(
-                  new MethodHandlers<
-                      com.google.pubsub.v1.StreamingPullRequest,
-                      com.google.pubsub.v1.StreamingPullResponse>(this, METHODID_STREAMING_PULL)))
-          .addMethod(
-              getModifyPushConfigMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.pubsub.v1.ModifyPushConfigRequest, com.google.protobuf.Empty>(
-                      this, METHODID_MODIFY_PUSH_CONFIG)))
-          .addMethod(
-              getGetSnapshotMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.pubsub.v1.GetSnapshotRequest, com.google.pubsub.v1.Snapshot>(
-                      this, METHODID_GET_SNAPSHOT)))
-          .addMethod(
-              getListSnapshotsMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.pubsub.v1.ListSnapshotsRequest,
-                      com.google.pubsub.v1.ListSnapshotsResponse>(this, METHODID_LIST_SNAPSHOTS)))
-          .addMethod(
-              getCreateSnapshotMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.pubsub.v1.CreateSnapshotRequest, com.google.pubsub.v1.Snapshot>(
-                      this, METHODID_CREATE_SNAPSHOT)))
-          .addMethod(
-              getUpdateSnapshotMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.pubsub.v1.UpdateSnapshotRequest, com.google.pubsub.v1.Snapshot>(
-                      this, METHODID_UPDATE_SNAPSHOT)))
-          .addMethod(
-              getDeleteSnapshotMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.pubsub.v1.DeleteSnapshotRequest, com.google.protobuf.Empty>(
-                      this, METHODID_DELETE_SNAPSHOT)))
-          .addMethod(
-              getSeekMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.pubsub.v1.SeekRequest, com.google.pubsub.v1.SeekResponse>(
-                      this, METHODID_SEEK)))
-          .build();
+      return SubscriberGrpc.bindService(this);
     }
   }
 
   /**
-   *
+   * A stub to allow clients to do asynchronous rpc calls to service Subscriber.
    *
    * <pre>
    * The service that an application uses to manipulate subscriptions and to
@@ -1164,15 +1077,15 @@ public final class SubscriberGrpc {
      *
      * <pre>
      * Creates a subscription to a given topic. See the [resource name rules]
-     * (https://cloud.google.com/pubsub/docs/admin#resource_names).
+     * (https://cloud.google.com/pubsub/docs/pubsub-basics#resource_names).
      * If the subscription already exists, returns `ALREADY_EXISTS`.
      * If the corresponding topic doesn't exist, returns `NOT_FOUND`.
      * If the name is not provided in the request, the server will assign a random
      * name for this subscription on the same project as the topic, conforming
      * to the [resource name format]
-     * (https://cloud.google.com/pubsub/docs/admin#resource_names). The generated
-     * name is populated in the returned Subscription object. Note that for REST
-     * API requests, you must specify a name in the request.
+     * (https://cloud.google.com/pubsub/docs/pubsub-basics#resource_names). The
+     * generated name is populated in the returned Subscription object. Note that
+     * for REST API requests, you must specify a name in the request.
      * </pre>
      */
     public void createSubscription(
@@ -1204,8 +1117,9 @@ public final class SubscriberGrpc {
      *
      *
      * <pre>
-     * Updates an existing subscription. Note that certain properties of a
-     * subscription, such as its topic, are not modifiable.
+     * Updates an existing subscription by updating the fields specified in the
+     * update mask. Note that certain properties of a subscription, such as its
+     * topic, are not modifiable.
      * </pre>
      */
     public void updateSubscription(
@@ -1299,9 +1213,7 @@ public final class SubscriberGrpc {
      *
      *
      * <pre>
-     * Pulls messages from the server. The server may return `UNAVAILABLE` if
-     * there are too many concurrent pull requests pending for the given
-     * subscription.
+     * Pulls messages from the server.
      * </pre>
      */
     public void pull(
@@ -1355,10 +1267,10 @@ public final class SubscriberGrpc {
      *
      * <pre>
      * Gets the configuration details of a snapshot. Snapshots are used in
-     * &lt;a href="https://cloud.google.com/pubsub/docs/replay-overview"&gt;Seek&lt;/a&gt;
-     * operations, which allow you to manage message acknowledgments in bulk. That
-     * is, you can set the acknowledgment state of messages in an existing
-     * subscription to the state captured by a snapshot.
+     * [Seek](https://cloud.google.com/pubsub/docs/replay-overview) operations,
+     * which allow you to manage message acknowledgments in bulk. That is, you can
+     * set the acknowledgment state of messages in an existing subscription to the
+     * state captured by a snapshot.
      * </pre>
      */
     public void getSnapshot(
@@ -1407,7 +1319,7 @@ public final class SubscriberGrpc {
      * the request, the server will assign a random
      * name for this snapshot on the same project as the subscription, conforming
      * to the [resource name format]
-     * (https://cloud.google.com/pubsub/docs/admin#resource_names). The
+     * (https://cloud.google.com/pubsub/docs/pubsub-basics#resource_names). The
      * generated name is populated in the returned Snapshot object. Note that for
      * REST API requests, you must specify a name in the request.
      * </pre>
@@ -1425,12 +1337,12 @@ public final class SubscriberGrpc {
      *
      *
      * <pre>
-     * Updates an existing snapshot. Snapshots are used in
-     * &lt;a href="https://cloud.google.com/pubsub/docs/replay-overview"&gt;Seek&lt;/a&gt;
-     * operations, which allow
-     * you to manage message acknowledgments in bulk. That is, you can set the
-     * acknowledgment state of messages in an existing subscription to the state
-     * captured by a snapshot.
+     * Updates an existing snapshot by updating the fields specified in the update
+     * mask. Snapshots are used in
+     * [Seek](https://cloud.google.com/pubsub/docs/replay-overview) operations,
+     * which allow you to manage message acknowledgments in bulk. That is, you can
+     * set the acknowledgment state of messages in an existing subscription to the
+     * state captured by a snapshot.
      * </pre>
      */
     public void updateSnapshot(
@@ -1488,7 +1400,7 @@ public final class SubscriberGrpc {
   }
 
   /**
-   *
+   * A stub to allow clients to do synchronous rpc calls to service Subscriber.
    *
    * <pre>
    * The service that an application uses to manipulate subscriptions and to
@@ -1513,15 +1425,15 @@ public final class SubscriberGrpc {
      *
      * <pre>
      * Creates a subscription to a given topic. See the [resource name rules]
-     * (https://cloud.google.com/pubsub/docs/admin#resource_names).
+     * (https://cloud.google.com/pubsub/docs/pubsub-basics#resource_names).
      * If the subscription already exists, returns `ALREADY_EXISTS`.
      * If the corresponding topic doesn't exist, returns `NOT_FOUND`.
      * If the name is not provided in the request, the server will assign a random
      * name for this subscription on the same project as the topic, conforming
      * to the [resource name format]
-     * (https://cloud.google.com/pubsub/docs/admin#resource_names). The generated
-     * name is populated in the returned Subscription object. Note that for REST
-     * API requests, you must specify a name in the request.
+     * (https://cloud.google.com/pubsub/docs/pubsub-basics#resource_names). The
+     * generated name is populated in the returned Subscription object. Note that
+     * for REST API requests, you must specify a name in the request.
      * </pre>
      */
     public com.google.pubsub.v1.Subscription createSubscription(
@@ -1547,8 +1459,9 @@ public final class SubscriberGrpc {
      *
      *
      * <pre>
-     * Updates an existing subscription. Note that certain properties of a
-     * subscription, such as its topic, are not modifiable.
+     * Updates an existing subscription by updating the fields specified in the
+     * update mask. Note that certain properties of a subscription, such as its
+     * topic, are not modifiable.
      * </pre>
      */
     public com.google.pubsub.v1.Subscription updateSubscription(
@@ -1625,9 +1538,7 @@ public final class SubscriberGrpc {
      *
      *
      * <pre>
-     * Pulls messages from the server. The server may return `UNAVAILABLE` if
-     * there are too many concurrent pull requests pending for the given
-     * subscription.
+     * Pulls messages from the server.
      * </pre>
      */
     public com.google.pubsub.v1.PullResponse pull(com.google.pubsub.v1.PullRequest request) {
@@ -1657,10 +1568,10 @@ public final class SubscriberGrpc {
      *
      * <pre>
      * Gets the configuration details of a snapshot. Snapshots are used in
-     * &lt;a href="https://cloud.google.com/pubsub/docs/replay-overview"&gt;Seek&lt;/a&gt;
-     * operations, which allow you to manage message acknowledgments in bulk. That
-     * is, you can set the acknowledgment state of messages in an existing
-     * subscription to the state captured by a snapshot.
+     * [Seek](https://cloud.google.com/pubsub/docs/replay-overview) operations,
+     * which allow you to manage message acknowledgments in bulk. That is, you can
+     * set the acknowledgment state of messages in an existing subscription to the
+     * state captured by a snapshot.
      * </pre>
      */
     public com.google.pubsub.v1.Snapshot getSnapshot(
@@ -1703,7 +1614,7 @@ public final class SubscriberGrpc {
      * the request, the server will assign a random
      * name for this snapshot on the same project as the subscription, conforming
      * to the [resource name format]
-     * (https://cloud.google.com/pubsub/docs/admin#resource_names). The
+     * (https://cloud.google.com/pubsub/docs/pubsub-basics#resource_names). The
      * generated name is populated in the returned Snapshot object. Note that for
      * REST API requests, you must specify a name in the request.
      * </pre>
@@ -1718,12 +1629,12 @@ public final class SubscriberGrpc {
      *
      *
      * <pre>
-     * Updates an existing snapshot. Snapshots are used in
-     * &lt;a href="https://cloud.google.com/pubsub/docs/replay-overview"&gt;Seek&lt;/a&gt;
-     * operations, which allow
-     * you to manage message acknowledgments in bulk. That is, you can set the
-     * acknowledgment state of messages in an existing subscription to the state
-     * captured by a snapshot.
+     * Updates an existing snapshot by updating the fields specified in the update
+     * mask. Snapshots are used in
+     * [Seek](https://cloud.google.com/pubsub/docs/replay-overview) operations,
+     * which allow you to manage message acknowledgments in bulk. That is, you can
+     * set the acknowledgment state of messages in an existing subscription to the
+     * state captured by a snapshot.
      * </pre>
      */
     public com.google.pubsub.v1.Snapshot updateSnapshot(
@@ -1773,7 +1684,7 @@ public final class SubscriberGrpc {
   }
 
   /**
-   *
+   * A stub to allow clients to do ListenableFuture-style rpc calls to service Subscriber.
    *
    * <pre>
    * The service that an application uses to manipulate subscriptions and to
@@ -1797,15 +1708,15 @@ public final class SubscriberGrpc {
      *
      * <pre>
      * Creates a subscription to a given topic. See the [resource name rules]
-     * (https://cloud.google.com/pubsub/docs/admin#resource_names).
+     * (https://cloud.google.com/pubsub/docs/pubsub-basics#resource_names).
      * If the subscription already exists, returns `ALREADY_EXISTS`.
      * If the corresponding topic doesn't exist, returns `NOT_FOUND`.
      * If the name is not provided in the request, the server will assign a random
      * name for this subscription on the same project as the topic, conforming
      * to the [resource name format]
-     * (https://cloud.google.com/pubsub/docs/admin#resource_names). The generated
-     * name is populated in the returned Subscription object. Note that for REST
-     * API requests, you must specify a name in the request.
+     * (https://cloud.google.com/pubsub/docs/pubsub-basics#resource_names). The
+     * generated name is populated in the returned Subscription object. Note that
+     * for REST API requests, you must specify a name in the request.
      * </pre>
      */
     public com.google.common.util.concurrent.ListenableFuture<com.google.pubsub.v1.Subscription>
@@ -1831,8 +1742,9 @@ public final class SubscriberGrpc {
      *
      *
      * <pre>
-     * Updates an existing subscription. Note that certain properties of a
-     * subscription, such as its topic, are not modifiable.
+     * Updates an existing subscription by updating the fields specified in the
+     * update mask. Note that certain properties of a subscription, such as its
+     * topic, are not modifiable.
      * </pre>
      */
     public com.google.common.util.concurrent.ListenableFuture<com.google.pubsub.v1.Subscription>
@@ -1911,9 +1823,7 @@ public final class SubscriberGrpc {
      *
      *
      * <pre>
-     * Pulls messages from the server. The server may return `UNAVAILABLE` if
-     * there are too many concurrent pull requests pending for the given
-     * subscription.
+     * Pulls messages from the server.
      * </pre>
      */
     public com.google.common.util.concurrent.ListenableFuture<com.google.pubsub.v1.PullResponse>
@@ -1944,10 +1854,10 @@ public final class SubscriberGrpc {
      *
      * <pre>
      * Gets the configuration details of a snapshot. Snapshots are used in
-     * &lt;a href="https://cloud.google.com/pubsub/docs/replay-overview"&gt;Seek&lt;/a&gt;
-     * operations, which allow you to manage message acknowledgments in bulk. That
-     * is, you can set the acknowledgment state of messages in an existing
-     * subscription to the state captured by a snapshot.
+     * [Seek](https://cloud.google.com/pubsub/docs/replay-overview) operations,
+     * which allow you to manage message acknowledgments in bulk. That is, you can
+     * set the acknowledgment state of messages in an existing subscription to the
+     * state captured by a snapshot.
      * </pre>
      */
     public com.google.common.util.concurrent.ListenableFuture<com.google.pubsub.v1.Snapshot>
@@ -1991,7 +1901,7 @@ public final class SubscriberGrpc {
      * the request, the server will assign a random
      * name for this snapshot on the same project as the subscription, conforming
      * to the [resource name format]
-     * (https://cloud.google.com/pubsub/docs/admin#resource_names). The
+     * (https://cloud.google.com/pubsub/docs/pubsub-basics#resource_names). The
      * generated name is populated in the returned Snapshot object. Note that for
      * REST API requests, you must specify a name in the request.
      * </pre>
@@ -2006,12 +1916,12 @@ public final class SubscriberGrpc {
      *
      *
      * <pre>
-     * Updates an existing snapshot. Snapshots are used in
-     * &lt;a href="https://cloud.google.com/pubsub/docs/replay-overview"&gt;Seek&lt;/a&gt;
-     * operations, which allow
-     * you to manage message acknowledgments in bulk. That is, you can set the
-     * acknowledgment state of messages in an existing subscription to the state
-     * captured by a snapshot.
+     * Updates an existing snapshot by updating the fields specified in the update
+     * mask. Snapshots are used in
+     * [Seek](https://cloud.google.com/pubsub/docs/replay-overview) operations,
+     * which allow you to manage message acknowledgments in bulk. That is, you can
+     * set the acknowledgment state of messages in an existing subscription to the
+     * state captured by a snapshot.
      * </pre>
      */
     public com.google.common.util.concurrent.ListenableFuture<com.google.pubsub.v1.Snapshot>
@@ -2083,10 +1993,10 @@ public final class SubscriberGrpc {
           io.grpc.stub.ServerCalls.ServerStreamingMethod<Req, Resp>,
           io.grpc.stub.ServerCalls.ClientStreamingMethod<Req, Resp>,
           io.grpc.stub.ServerCalls.BidiStreamingMethod<Req, Resp> {
-    private final SubscriberImplBase serviceImpl;
+    private final AsyncService serviceImpl;
     private final int methodId;
 
-    MethodHandlers(SubscriberImplBase serviceImpl, int methodId) {
+    MethodHandlers(AsyncService serviceImpl, int methodId) {
       this.serviceImpl = serviceImpl;
       this.methodId = methodId;
     }
@@ -2193,6 +2103,108 @@ public final class SubscriberGrpc {
     }
   }
 
+  public static final io.grpc.ServerServiceDefinition bindService(AsyncService service) {
+    return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
+        .addMethod(
+            getCreateSubscriptionMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.pubsub.v1.Subscription, com.google.pubsub.v1.Subscription>(
+                    service, METHODID_CREATE_SUBSCRIPTION)))
+        .addMethod(
+            getGetSubscriptionMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.pubsub.v1.GetSubscriptionRequest, com.google.pubsub.v1.Subscription>(
+                    service, METHODID_GET_SUBSCRIPTION)))
+        .addMethod(
+            getUpdateSubscriptionMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.pubsub.v1.UpdateSubscriptionRequest,
+                    com.google.pubsub.v1.Subscription>(service, METHODID_UPDATE_SUBSCRIPTION)))
+        .addMethod(
+            getListSubscriptionsMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.pubsub.v1.ListSubscriptionsRequest,
+                    com.google.pubsub.v1.ListSubscriptionsResponse>(
+                    service, METHODID_LIST_SUBSCRIPTIONS)))
+        .addMethod(
+            getDeleteSubscriptionMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.pubsub.v1.DeleteSubscriptionRequest, com.google.protobuf.Empty>(
+                    service, METHODID_DELETE_SUBSCRIPTION)))
+        .addMethod(
+            getModifyAckDeadlineMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.pubsub.v1.ModifyAckDeadlineRequest, com.google.protobuf.Empty>(
+                    service, METHODID_MODIFY_ACK_DEADLINE)))
+        .addMethod(
+            getAcknowledgeMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.pubsub.v1.AcknowledgeRequest, com.google.protobuf.Empty>(
+                    service, METHODID_ACKNOWLEDGE)))
+        .addMethod(
+            getPullMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.pubsub.v1.PullRequest, com.google.pubsub.v1.PullResponse>(
+                    service, METHODID_PULL)))
+        .addMethod(
+            getStreamingPullMethod(),
+            io.grpc.stub.ServerCalls.asyncBidiStreamingCall(
+                new MethodHandlers<
+                    com.google.pubsub.v1.StreamingPullRequest,
+                    com.google.pubsub.v1.StreamingPullResponse>(service, METHODID_STREAMING_PULL)))
+        .addMethod(
+            getModifyPushConfigMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.pubsub.v1.ModifyPushConfigRequest, com.google.protobuf.Empty>(
+                    service, METHODID_MODIFY_PUSH_CONFIG)))
+        .addMethod(
+            getGetSnapshotMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.pubsub.v1.GetSnapshotRequest, com.google.pubsub.v1.Snapshot>(
+                    service, METHODID_GET_SNAPSHOT)))
+        .addMethod(
+            getListSnapshotsMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.pubsub.v1.ListSnapshotsRequest,
+                    com.google.pubsub.v1.ListSnapshotsResponse>(service, METHODID_LIST_SNAPSHOTS)))
+        .addMethod(
+            getCreateSnapshotMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.pubsub.v1.CreateSnapshotRequest, com.google.pubsub.v1.Snapshot>(
+                    service, METHODID_CREATE_SNAPSHOT)))
+        .addMethod(
+            getUpdateSnapshotMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.pubsub.v1.UpdateSnapshotRequest, com.google.pubsub.v1.Snapshot>(
+                    service, METHODID_UPDATE_SNAPSHOT)))
+        .addMethod(
+            getDeleteSnapshotMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.pubsub.v1.DeleteSnapshotRequest, com.google.protobuf.Empty>(
+                    service, METHODID_DELETE_SNAPSHOT)))
+        .addMethod(
+            getSeekMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.pubsub.v1.SeekRequest, com.google.pubsub.v1.SeekResponse>(
+                    service, METHODID_SEEK)))
+        .build();
+  }
+
   private abstract static class SubscriberBaseDescriptorSupplier
       implements io.grpc.protobuf.ProtoFileDescriptorSupplier,
           io.grpc.protobuf.ProtoServiceDescriptorSupplier {
@@ -2217,9 +2229,9 @@ public final class SubscriberGrpc {
   private static final class SubscriberMethodDescriptorSupplier
       extends SubscriberBaseDescriptorSupplier
       implements io.grpc.protobuf.ProtoMethodDescriptorSupplier {
-    private final String methodName;
+    private final java.lang.String methodName;
 
-    SubscriberMethodDescriptorSupplier(String methodName) {
+    SubscriberMethodDescriptorSupplier(java.lang.String methodName) {
       this.methodName = methodName;
     }
 

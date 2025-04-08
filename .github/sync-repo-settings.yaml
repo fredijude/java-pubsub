@@ -8,18 +8,18 @@ branchProtectionRules:
     requiresCodeOwnerReviews: true
     requiresStrictStatusChecks: false
     requiredStatusCheckContexts:
-      - dependencies (8)
-      - dependencies (11)
+      - dependencies (17)
       - lint
       - clirr
       - units (8)
       - units (11)
       - 'Kokoro - Test: Integration'
-      - Kokoro - Against Pub/Sub Lite samples
       - cla/google
-      - OwlBot Post Processor
       - 'Kokoro - Test: Java GraalVM Native Image'
       - 'Kokoro - Test: Java 17 GraalVM Native Image'
+      - javadoc
+      - library_generation
+      - unmanaged_dependency_check
   - pattern: 1.111.0-sp
     isAdminEnforced: true
     requiredApprovingReviewCount: 1
@@ -35,7 +35,6 @@ branchProtectionRules:
       - 'Kokoro - Test: Integration'
       - Kokoro - Against Pub/Sub Lite samples
       - cla/google
-      - OwlBot Post Processor
   - pattern: java7
     isAdminEnforced: true
     requiredApprovingReviewCount: 1
@@ -51,7 +50,6 @@ branchProtectionRules:
       - 'Kokoro - Test: Integration'
       - Kokoro - Against Pub/Sub Lite samples
       - cla/google
-      - OwlBot Post Processor
   - pattern: 1.114.x
     isAdminEnforced: true
     requiredApprovingReviewCount: 1
@@ -67,7 +65,6 @@ branchProtectionRules:
       - 'Kokoro - Test: Integration'
       - Kokoro - Against Pub/Sub Lite samples
       - cla/google
-      - OwlBot Post Processor
   - pattern: 1.116.x
     isAdminEnforced: true
     requiredApprovingReviewCount: 1
@@ -83,7 +80,6 @@ branchProtectionRules:
       - 'Kokoro - Test: Integration'
       - Kokoro - Against Pub/Sub Lite samples
       - cla/google
-      - OwlBot Post Processor
   - pattern: 1.117.x
     isAdminEnforced: true
     requiredApprovingReviewCount: 1
@@ -99,7 +95,6 @@ branchProtectionRules:
       - 'Kokoro - Test: Integration'
       - Kokoro - Against Pub/Sub Lite samples
       - cla/google
-      - OwlBot Post Processor
   - pattern: 1.120.x
     isAdminEnforced: true
     requiredApprovingReviewCount: 1
@@ -115,7 +110,6 @@ branchProtectionRules:
       - 'Kokoro - Test: Integration'
       - Kokoro - Against Pub/Sub Lite samples
       - cla/google
-      - OwlBot Post Processor
       - 'Kokoro - Test: Java GraalVM Native Image'
       - 'Kokoro - Test: Java 17 GraalVM Native Image'
   - pattern: 1.121.x
@@ -133,9 +127,74 @@ branchProtectionRules:
       - 'Kokoro - Test: Integration'
       - Kokoro - Against Pub/Sub Lite samples
       - cla/google
-      - OwlBot Post Processor
       - 'Kokoro - Test: Java GraalVM Native Image'
       - 'Kokoro - Test: Java 17 GraalVM Native Image'
+  - pattern: 1.123.x
+    isAdminEnforced: true
+    requiredApprovingReviewCount: 1
+    requiresCodeOwnerReviews: true
+    requiresStrictStatusChecks: false
+    requiredStatusCheckContexts:
+      - dependencies (17)
+      - lint
+      - clirr
+      - units (8)
+      - units (11)
+      - 'Kokoro - Test: Integration'
+      - Kokoro - Against Pub/Sub Lite samples
+      - cla/google
+      - 'Kokoro - Test: Java GraalVM Native Image'
+      - 'Kokoro - Test: Java 17 GraalVM Native Image'
+  - pattern: 1.125.x
+    isAdminEnforced: true
+    requiredApprovingReviewCount: 1
+    requiresCodeOwnerReviews: true
+    requiresStrictStatusChecks: false
+    requiredStatusCheckContexts:
+      - dependencies (17)
+      - lint
+      - clirr
+      - units (8)
+      - units (11)
+      - 'Kokoro - Test: Integration'
+      - cla/google
+      - 'Kokoro - Test: Java GraalVM Native Image'
+      - 'Kokoro - Test: Java 17 GraalVM Native Image'
+      - javadoc
+  - pattern: 1.129.x
+    isAdminEnforced: true
+    requiredApprovingReviewCount: 1
+    requiresCodeOwnerReviews: true
+    requiresStrictStatusChecks: false
+    requiredStatusCheckContexts:
+      - dependencies (17)
+      - lint
+      - clirr
+      - units (8)
+      - units (11)
+      - 'Kokoro - Test: Integration'
+      - cla/google
+      - 'Kokoro - Test: Java GraalVM Native Image'
+      - 'Kokoro - Test: Java 17 GraalVM Native Image'
+      - javadoc
+  - pattern: 1.137.x
+    isAdminEnforced: true
+    requiredApprovingReviewCount: 1
+    requiresCodeOwnerReviews: true
+    requiresStrictStatusChecks: false
+    requiredStatusCheckContexts:
+      - dependencies (17)
+      - lint
+      - clirr
+      - units (8)
+      - units (11)
+      - 'Kokoro - Test: Integration'
+      - cla/google
+      - 'Kokoro - Test: Java GraalVM Native Image'
+      - 'Kokoro - Test: Java 17 GraalVM Native Image'
+      - javadoc
+      - library_generation
+      - unmanaged_dependency_check
 permissionRules:
   - team: yoshi-admins
     permission: admin

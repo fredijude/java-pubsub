@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Google LLC
+ * Copyright 2025 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import static com.google.cloud.pubsub.v1.TopicAdminClient.ListTopicSnapshotsPage
 import static com.google.cloud.pubsub.v1.TopicAdminClient.ListTopicSubscriptionsPagedResponse;
 import static com.google.cloud.pubsub.v1.TopicAdminClient.ListTopicsPagedResponse;
 
-import com.google.api.core.BetaApi;
 import com.google.api.core.InternalApi;
 import com.google.api.gax.core.BackgroundResource;
 import com.google.api.gax.core.BackgroundResourceAggregation;
@@ -31,6 +30,7 @@ import com.google.api.gax.httpjson.ProtoMessageRequestFormatter;
 import com.google.api.gax.httpjson.ProtoMessageResponseParser;
 import com.google.api.gax.httpjson.ProtoRestSerializer;
 import com.google.api.gax.rpc.ClientContext;
+import com.google.api.gax.rpc.RequestParamsBuilder;
 import com.google.api.gax.rpc.UnaryCallable;
 import com.google.iam.v1.GetIamPolicyRequest;
 import com.google.iam.v1.Policy;
@@ -68,7 +68,6 @@ import javax.annotation.Generated;
  * <p>This class is for advanced usage and reflects the underlying API directly.
  */
 @Generated("by gapic-generator-java")
-@BetaApi
 public class HttpJsonPublisherStub extends PublisherStub {
   private static final TypeRegistry typeRegistry = TypeRegistry.newBuilder().build();
 
@@ -577,26 +576,56 @@ public class HttpJsonPublisherStub extends PublisherStub {
         HttpJsonCallSettings.<Topic, Topic>newBuilder()
             .setMethodDescriptor(createTopicMethodDescriptor)
             .setTypeRegistry(typeRegistry)
+            .setParamsExtractor(
+                request -> {
+                  RequestParamsBuilder builder = RequestParamsBuilder.create();
+                  builder.add("name", String.valueOf(request.getName()));
+                  return builder.build();
+                })
             .build();
     HttpJsonCallSettings<UpdateTopicRequest, Topic> updateTopicTransportSettings =
         HttpJsonCallSettings.<UpdateTopicRequest, Topic>newBuilder()
             .setMethodDescriptor(updateTopicMethodDescriptor)
             .setTypeRegistry(typeRegistry)
+            .setParamsExtractor(
+                request -> {
+                  RequestParamsBuilder builder = RequestParamsBuilder.create();
+                  builder.add("topic.name", String.valueOf(request.getTopic().getName()));
+                  return builder.build();
+                })
             .build();
     HttpJsonCallSettings<PublishRequest, PublishResponse> publishTransportSettings =
         HttpJsonCallSettings.<PublishRequest, PublishResponse>newBuilder()
             .setMethodDescriptor(publishMethodDescriptor)
             .setTypeRegistry(typeRegistry)
+            .setParamsExtractor(
+                request -> {
+                  RequestParamsBuilder builder = RequestParamsBuilder.create();
+                  builder.add("topic", String.valueOf(request.getTopic()));
+                  return builder.build();
+                })
             .build();
     HttpJsonCallSettings<GetTopicRequest, Topic> getTopicTransportSettings =
         HttpJsonCallSettings.<GetTopicRequest, Topic>newBuilder()
             .setMethodDescriptor(getTopicMethodDescriptor)
             .setTypeRegistry(typeRegistry)
+            .setParamsExtractor(
+                request -> {
+                  RequestParamsBuilder builder = RequestParamsBuilder.create();
+                  builder.add("topic", String.valueOf(request.getTopic()));
+                  return builder.build();
+                })
             .build();
     HttpJsonCallSettings<ListTopicsRequest, ListTopicsResponse> listTopicsTransportSettings =
         HttpJsonCallSettings.<ListTopicsRequest, ListTopicsResponse>newBuilder()
             .setMethodDescriptor(listTopicsMethodDescriptor)
             .setTypeRegistry(typeRegistry)
+            .setParamsExtractor(
+                request -> {
+                  RequestParamsBuilder builder = RequestParamsBuilder.create();
+                  builder.add("project", String.valueOf(request.getProject()));
+                  return builder.build();
+                })
             .build();
     HttpJsonCallSettings<ListTopicSubscriptionsRequest, ListTopicSubscriptionsResponse>
         listTopicSubscriptionsTransportSettings =
@@ -604,39 +633,81 @@ public class HttpJsonPublisherStub extends PublisherStub {
                 .<ListTopicSubscriptionsRequest, ListTopicSubscriptionsResponse>newBuilder()
                 .setMethodDescriptor(listTopicSubscriptionsMethodDescriptor)
                 .setTypeRegistry(typeRegistry)
+                .setParamsExtractor(
+                    request -> {
+                      RequestParamsBuilder builder = RequestParamsBuilder.create();
+                      builder.add("topic", String.valueOf(request.getTopic()));
+                      return builder.build();
+                    })
                 .build();
     HttpJsonCallSettings<ListTopicSnapshotsRequest, ListTopicSnapshotsResponse>
         listTopicSnapshotsTransportSettings =
             HttpJsonCallSettings.<ListTopicSnapshotsRequest, ListTopicSnapshotsResponse>newBuilder()
                 .setMethodDescriptor(listTopicSnapshotsMethodDescriptor)
                 .setTypeRegistry(typeRegistry)
+                .setParamsExtractor(
+                    request -> {
+                      RequestParamsBuilder builder = RequestParamsBuilder.create();
+                      builder.add("topic", String.valueOf(request.getTopic()));
+                      return builder.build();
+                    })
                 .build();
     HttpJsonCallSettings<DeleteTopicRequest, Empty> deleteTopicTransportSettings =
         HttpJsonCallSettings.<DeleteTopicRequest, Empty>newBuilder()
             .setMethodDescriptor(deleteTopicMethodDescriptor)
             .setTypeRegistry(typeRegistry)
+            .setParamsExtractor(
+                request -> {
+                  RequestParamsBuilder builder = RequestParamsBuilder.create();
+                  builder.add("topic", String.valueOf(request.getTopic()));
+                  return builder.build();
+                })
             .build();
     HttpJsonCallSettings<DetachSubscriptionRequest, DetachSubscriptionResponse>
         detachSubscriptionTransportSettings =
             HttpJsonCallSettings.<DetachSubscriptionRequest, DetachSubscriptionResponse>newBuilder()
                 .setMethodDescriptor(detachSubscriptionMethodDescriptor)
                 .setTypeRegistry(typeRegistry)
+                .setParamsExtractor(
+                    request -> {
+                      RequestParamsBuilder builder = RequestParamsBuilder.create();
+                      builder.add("subscription", String.valueOf(request.getSubscription()));
+                      return builder.build();
+                    })
                 .build();
     HttpJsonCallSettings<SetIamPolicyRequest, Policy> setIamPolicyTransportSettings =
         HttpJsonCallSettings.<SetIamPolicyRequest, Policy>newBuilder()
             .setMethodDescriptor(setIamPolicyMethodDescriptor)
             .setTypeRegistry(typeRegistry)
+            .setParamsExtractor(
+                request -> {
+                  RequestParamsBuilder builder = RequestParamsBuilder.create();
+                  builder.add("resource", String.valueOf(request.getResource()));
+                  return builder.build();
+                })
             .build();
     HttpJsonCallSettings<GetIamPolicyRequest, Policy> getIamPolicyTransportSettings =
         HttpJsonCallSettings.<GetIamPolicyRequest, Policy>newBuilder()
             .setMethodDescriptor(getIamPolicyMethodDescriptor)
             .setTypeRegistry(typeRegistry)
+            .setParamsExtractor(
+                request -> {
+                  RequestParamsBuilder builder = RequestParamsBuilder.create();
+                  builder.add("resource", String.valueOf(request.getResource()));
+                  return builder.build();
+                })
             .build();
     HttpJsonCallSettings<TestIamPermissionsRequest, TestIamPermissionsResponse>
         testIamPermissionsTransportSettings =
             HttpJsonCallSettings.<TestIamPermissionsRequest, TestIamPermissionsResponse>newBuilder()
                 .setMethodDescriptor(testIamPermissionsMethodDescriptor)
                 .setTypeRegistry(typeRegistry)
+                .setParamsExtractor(
+                    request -> {
+                      RequestParamsBuilder builder = RequestParamsBuilder.create();
+                      builder.add("resource", String.valueOf(request.getResource()));
+                      return builder.build();
+                    })
                 .build();
 
     this.createTopicCallable =

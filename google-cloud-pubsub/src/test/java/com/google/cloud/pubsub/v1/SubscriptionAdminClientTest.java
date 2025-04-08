@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Google LLC
+ * Copyright 2025 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,6 +47,7 @@ import com.google.protobuf.FieldMask;
 import com.google.protobuf.Timestamp;
 import com.google.pubsub.v1.AcknowledgeRequest;
 import com.google.pubsub.v1.BigQueryConfig;
+import com.google.pubsub.v1.CloudStorageConfig;
 import com.google.pubsub.v1.CreateSnapshotRequest;
 import com.google.pubsub.v1.DeadLetterPolicy;
 import com.google.pubsub.v1.DeleteSnapshotRequest;
@@ -58,6 +59,7 @@ import com.google.pubsub.v1.ListSnapshotsRequest;
 import com.google.pubsub.v1.ListSnapshotsResponse;
 import com.google.pubsub.v1.ListSubscriptionsRequest;
 import com.google.pubsub.v1.ListSubscriptionsResponse;
+import com.google.pubsub.v1.MessageTransform;
 import com.google.pubsub.v1.ModifyAckDeadlineRequest;
 import com.google.pubsub.v1.ModifyPushConfigRequest;
 import com.google.pubsub.v1.ProjectName;
@@ -143,6 +145,7 @@ public class SubscriptionAdminClientTest {
             .setTopic(TopicName.ofProjectTopicName("[PROJECT]", "[TOPIC]").toString())
             .setPushConfig(PushConfig.newBuilder().build())
             .setBigqueryConfig(BigQueryConfig.newBuilder().build())
+            .setCloudStorageConfig(CloudStorageConfig.newBuilder().build())
             .setAckDeadlineSeconds(2135351438)
             .setRetainAckedMessages(true)
             .setMessageRetentionDuration(Duration.newBuilder().build())
@@ -155,6 +158,9 @@ public class SubscriptionAdminClientTest {
             .setDetached(true)
             .setEnableExactlyOnceDelivery(true)
             .setTopicMessageRetentionDuration(Duration.newBuilder().build())
+            .setAnalyticsHubSubscriptionInfo(
+                Subscription.AnalyticsHubSubscriptionInfo.newBuilder().build())
+            .addAllMessageTransforms(new ArrayList<MessageTransform>())
             .build();
     mockSubscriber.addResponse(expectedResponse);
 
@@ -206,6 +212,7 @@ public class SubscriptionAdminClientTest {
             .setTopic(TopicName.ofProjectTopicName("[PROJECT]", "[TOPIC]").toString())
             .setPushConfig(PushConfig.newBuilder().build())
             .setBigqueryConfig(BigQueryConfig.newBuilder().build())
+            .setCloudStorageConfig(CloudStorageConfig.newBuilder().build())
             .setAckDeadlineSeconds(2135351438)
             .setRetainAckedMessages(true)
             .setMessageRetentionDuration(Duration.newBuilder().build())
@@ -218,6 +225,9 @@ public class SubscriptionAdminClientTest {
             .setDetached(true)
             .setEnableExactlyOnceDelivery(true)
             .setTopicMessageRetentionDuration(Duration.newBuilder().build())
+            .setAnalyticsHubSubscriptionInfo(
+                Subscription.AnalyticsHubSubscriptionInfo.newBuilder().build())
+            .addAllMessageTransforms(new ArrayList<MessageTransform>())
             .build();
     mockSubscriber.addResponse(expectedResponse);
 
@@ -269,6 +279,7 @@ public class SubscriptionAdminClientTest {
             .setTopic(TopicName.ofProjectTopicName("[PROJECT]", "[TOPIC]").toString())
             .setPushConfig(PushConfig.newBuilder().build())
             .setBigqueryConfig(BigQueryConfig.newBuilder().build())
+            .setCloudStorageConfig(CloudStorageConfig.newBuilder().build())
             .setAckDeadlineSeconds(2135351438)
             .setRetainAckedMessages(true)
             .setMessageRetentionDuration(Duration.newBuilder().build())
@@ -281,6 +292,9 @@ public class SubscriptionAdminClientTest {
             .setDetached(true)
             .setEnableExactlyOnceDelivery(true)
             .setTopicMessageRetentionDuration(Duration.newBuilder().build())
+            .setAnalyticsHubSubscriptionInfo(
+                Subscription.AnalyticsHubSubscriptionInfo.newBuilder().build())
+            .addAllMessageTransforms(new ArrayList<MessageTransform>())
             .build();
     mockSubscriber.addResponse(expectedResponse);
 
@@ -332,6 +346,7 @@ public class SubscriptionAdminClientTest {
             .setTopic(TopicName.ofProjectTopicName("[PROJECT]", "[TOPIC]").toString())
             .setPushConfig(PushConfig.newBuilder().build())
             .setBigqueryConfig(BigQueryConfig.newBuilder().build())
+            .setCloudStorageConfig(CloudStorageConfig.newBuilder().build())
             .setAckDeadlineSeconds(2135351438)
             .setRetainAckedMessages(true)
             .setMessageRetentionDuration(Duration.newBuilder().build())
@@ -344,6 +359,9 @@ public class SubscriptionAdminClientTest {
             .setDetached(true)
             .setEnableExactlyOnceDelivery(true)
             .setTopicMessageRetentionDuration(Duration.newBuilder().build())
+            .setAnalyticsHubSubscriptionInfo(
+                Subscription.AnalyticsHubSubscriptionInfo.newBuilder().build())
+            .addAllMessageTransforms(new ArrayList<MessageTransform>())
             .build();
     mockSubscriber.addResponse(expectedResponse);
 
@@ -395,6 +413,7 @@ public class SubscriptionAdminClientTest {
             .setTopic(TopicName.ofProjectTopicName("[PROJECT]", "[TOPIC]").toString())
             .setPushConfig(PushConfig.newBuilder().build())
             .setBigqueryConfig(BigQueryConfig.newBuilder().build())
+            .setCloudStorageConfig(CloudStorageConfig.newBuilder().build())
             .setAckDeadlineSeconds(2135351438)
             .setRetainAckedMessages(true)
             .setMessageRetentionDuration(Duration.newBuilder().build())
@@ -407,6 +426,9 @@ public class SubscriptionAdminClientTest {
             .setDetached(true)
             .setEnableExactlyOnceDelivery(true)
             .setTopicMessageRetentionDuration(Duration.newBuilder().build())
+            .setAnalyticsHubSubscriptionInfo(
+                Subscription.AnalyticsHubSubscriptionInfo.newBuilder().build())
+            .addAllMessageTransforms(new ArrayList<MessageTransform>())
             .build();
     mockSubscriber.addResponse(expectedResponse);
 
@@ -448,6 +470,7 @@ public class SubscriptionAdminClientTest {
             .setTopic(TopicName.ofProjectTopicName("[PROJECT]", "[TOPIC]").toString())
             .setPushConfig(PushConfig.newBuilder().build())
             .setBigqueryConfig(BigQueryConfig.newBuilder().build())
+            .setCloudStorageConfig(CloudStorageConfig.newBuilder().build())
             .setAckDeadlineSeconds(2135351438)
             .setRetainAckedMessages(true)
             .setMessageRetentionDuration(Duration.newBuilder().build())
@@ -460,6 +483,9 @@ public class SubscriptionAdminClientTest {
             .setDetached(true)
             .setEnableExactlyOnceDelivery(true)
             .setTopicMessageRetentionDuration(Duration.newBuilder().build())
+            .setAnalyticsHubSubscriptionInfo(
+                Subscription.AnalyticsHubSubscriptionInfo.newBuilder().build())
+            .addAllMessageTransforms(new ArrayList<MessageTransform>())
             .build();
     mockSubscriber.addResponse(expectedResponse);
 
@@ -501,6 +527,7 @@ public class SubscriptionAdminClientTest {
             .setTopic(TopicName.ofProjectTopicName("[PROJECT]", "[TOPIC]").toString())
             .setPushConfig(PushConfig.newBuilder().build())
             .setBigqueryConfig(BigQueryConfig.newBuilder().build())
+            .setCloudStorageConfig(CloudStorageConfig.newBuilder().build())
             .setAckDeadlineSeconds(2135351438)
             .setRetainAckedMessages(true)
             .setMessageRetentionDuration(Duration.newBuilder().build())
@@ -513,24 +540,24 @@ public class SubscriptionAdminClientTest {
             .setDetached(true)
             .setEnableExactlyOnceDelivery(true)
             .setTopicMessageRetentionDuration(Duration.newBuilder().build())
+            .setAnalyticsHubSubscriptionInfo(
+                Subscription.AnalyticsHubSubscriptionInfo.newBuilder().build())
+            .addAllMessageTransforms(new ArrayList<MessageTransform>())
             .build();
     mockSubscriber.addResponse(expectedResponse);
 
-    UpdateSubscriptionRequest request =
-        UpdateSubscriptionRequest.newBuilder()
-            .setSubscription(Subscription.newBuilder().build())
-            .setUpdateMask(FieldMask.newBuilder().build())
-            .build();
+    Subscription subscription = Subscription.newBuilder().build();
+    FieldMask updateMask = FieldMask.newBuilder().build();
 
-    Subscription actualResponse = client.updateSubscription(request);
+    Subscription actualResponse = client.updateSubscription(subscription, updateMask);
     Assert.assertEquals(expectedResponse, actualResponse);
 
     List<AbstractMessage> actualRequests = mockSubscriber.getRequests();
     Assert.assertEquals(1, actualRequests.size());
     UpdateSubscriptionRequest actualRequest = ((UpdateSubscriptionRequest) actualRequests.get(0));
 
-    Assert.assertEquals(request.getSubscription(), actualRequest.getSubscription());
-    Assert.assertEquals(request.getUpdateMask(), actualRequest.getUpdateMask());
+    Assert.assertEquals(subscription, actualRequest.getSubscription());
+    Assert.assertEquals(updateMask, actualRequest.getUpdateMask());
     Assert.assertTrue(
         channelProvider.isHeaderSent(
             ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
@@ -543,12 +570,9 @@ public class SubscriptionAdminClientTest {
     mockSubscriber.addException(exception);
 
     try {
-      UpdateSubscriptionRequest request =
-          UpdateSubscriptionRequest.newBuilder()
-              .setSubscription(Subscription.newBuilder().build())
-              .setUpdateMask(FieldMask.newBuilder().build())
-              .build();
-      client.updateSubscription(request);
+      Subscription subscription = Subscription.newBuilder().build();
+      FieldMask updateMask = FieldMask.newBuilder().build();
+      client.updateSubscription(subscription, updateMask);
       Assert.fail("No exception raised");
     } catch (InvalidArgumentException e) {
       // Expected exception.
@@ -1533,21 +1557,18 @@ public class SubscriptionAdminClientTest {
             .build();
     mockSubscriber.addResponse(expectedResponse);
 
-    UpdateSnapshotRequest request =
-        UpdateSnapshotRequest.newBuilder()
-            .setSnapshot(Snapshot.newBuilder().build())
-            .setUpdateMask(FieldMask.newBuilder().build())
-            .build();
+    Snapshot snapshot = Snapshot.newBuilder().build();
+    FieldMask updateMask = FieldMask.newBuilder().build();
 
-    Snapshot actualResponse = client.updateSnapshot(request);
+    Snapshot actualResponse = client.updateSnapshot(snapshot, updateMask);
     Assert.assertEquals(expectedResponse, actualResponse);
 
     List<AbstractMessage> actualRequests = mockSubscriber.getRequests();
     Assert.assertEquals(1, actualRequests.size());
     UpdateSnapshotRequest actualRequest = ((UpdateSnapshotRequest) actualRequests.get(0));
 
-    Assert.assertEquals(request.getSnapshot(), actualRequest.getSnapshot());
-    Assert.assertEquals(request.getUpdateMask(), actualRequest.getUpdateMask());
+    Assert.assertEquals(snapshot, actualRequest.getSnapshot());
+    Assert.assertEquals(updateMask, actualRequest.getUpdateMask());
     Assert.assertTrue(
         channelProvider.isHeaderSent(
             ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
@@ -1560,12 +1581,9 @@ public class SubscriptionAdminClientTest {
     mockSubscriber.addException(exception);
 
     try {
-      UpdateSnapshotRequest request =
-          UpdateSnapshotRequest.newBuilder()
-              .setSnapshot(Snapshot.newBuilder().build())
-              .setUpdateMask(FieldMask.newBuilder().build())
-              .build();
-      client.updateSnapshot(request);
+      Snapshot snapshot = Snapshot.newBuilder().build();
+      FieldMask updateMask = FieldMask.newBuilder().build();
+      client.updateSnapshot(snapshot, updateMask);
       Assert.fail("No exception raised");
     } catch (InvalidArgumentException e) {
       // Expected exception.

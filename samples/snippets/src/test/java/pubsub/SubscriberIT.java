@@ -38,16 +38,15 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 
 public class SubscriberIT {
-  private ByteArrayOutputStream bout;
-  private PrintStream out;
+  private static ByteArrayOutputStream bout;
+  private static PrintStream out;
 
   private static final String projectId = System.getenv("GOOGLE_CLOUD_PROJECT");
   private static final String _suffix = UUID.randomUUID().toString();
@@ -56,12 +55,16 @@ public class SubscriberIT {
   private static final String subscriptionId = "subscriber-test-subscription-" + _suffix;
   // For a subscription with exactly once delivery enabled.
   private static final String subscriptionEodId = "subscriber-test-subscription-eod" + _suffix;
+  private static final String subscriptionOptimisticId =
+      "subscriber-test-subscription-optimistic" + _suffix;
   private static final TopicName topicName = TopicName.of(projectId, topicId);
   private static final TopicName topicNameEod = TopicName.of(projectId, topicIdEod);
   private static final ProjectSubscriptionName subscriptionName =
       ProjectSubscriptionName.of(projectId, subscriptionId);
   private static final ProjectSubscriptionName subscriptionEodName =
       ProjectSubscriptionName.of(projectId, subscriptionEodId);
+  private static final ProjectSubscriptionName subscriptionOptimisticName =
+      ProjectSubscriptionName.of(projectId, subscriptionOptimisticId);
 
   private static void requireEnvVar(String varName) {
     assertNotNull(
@@ -125,8 +128,8 @@ public class SubscriberIT {
     requireEnvVar("GOOGLE_CLOUD_PROJECT");
   }
 
-  @Before
-  public void setUp() throws Exception {
+  @BeforeClass
+  public static void setUp() throws Exception {
     bout = new ByteArrayOutputStream();
     out = new PrintStream(bout);
     System.setOut(out);
@@ -158,11 +161,16 @@ public class SubscriberIT {
     }
   }
 
-  @After
-  public void tearDown() throws Exception {
+  @AfterClass
+  public static void tearDown() throws Exception {
     try (SubscriptionAdminClient subscriptionAdminClient = SubscriptionAdminClient.create()) {
       subscriptionAdminClient.deleteSubscription(subscriptionName.toString());
       subscriptionAdminClient.deleteSubscription(subscriptionEodName.toString());
+      try {
+        subscriptionAdminClient.deleteSubscription(subscriptionOptimisticName.toString());
+      } catch (Exception e) {
+        // Ignore exception.
+      }
     }
 
     try (TopicAdminClient topicAdminClient = TopicAdminClient.create()) {
@@ -239,5 +247,15 @@ public class SubscriberIT {
     for (String messageId : messageIds) {
       assertThat(bout.toString()).contains("Message successfully acked: " + messageId);
     }
+  }
+
+  @Test
+  public void testOptimisticSubscriber() throws Exception {
+    bout.reset();
+    OptimisticSubscribeExample.optimisticSubscribeExample(
+        projectId, subscriptionOptimisticId, topicId);
+    assertThat(
+        bout.toString()
+            .contains("Created pull subscription: " + subscriptionOptimisticName.toString()));
   }
 }

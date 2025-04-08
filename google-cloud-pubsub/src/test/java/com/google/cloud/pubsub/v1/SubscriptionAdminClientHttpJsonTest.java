@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Google LLC
+ * Copyright 2025 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,10 +44,12 @@ import com.google.protobuf.Empty;
 import com.google.protobuf.FieldMask;
 import com.google.protobuf.Timestamp;
 import com.google.pubsub.v1.BigQueryConfig;
+import com.google.pubsub.v1.CloudStorageConfig;
 import com.google.pubsub.v1.DeadLetterPolicy;
 import com.google.pubsub.v1.ExpirationPolicy;
 import com.google.pubsub.v1.ListSnapshotsResponse;
 import com.google.pubsub.v1.ListSubscriptionsResponse;
+import com.google.pubsub.v1.MessageTransform;
 import com.google.pubsub.v1.ProjectName;
 import com.google.pubsub.v1.PullResponse;
 import com.google.pubsub.v1.PushConfig;
@@ -61,8 +63,6 @@ import com.google.pubsub.v1.SnapshotName;
 import com.google.pubsub.v1.Subscription;
 import com.google.pubsub.v1.SubscriptionName;
 import com.google.pubsub.v1.TopicName;
-import com.google.pubsub.v1.UpdateSnapshotRequest;
-import com.google.pubsub.v1.UpdateSubscriptionRequest;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -119,6 +119,7 @@ public class SubscriptionAdminClientHttpJsonTest {
             .setTopic(TopicName.ofProjectTopicName("[PROJECT]", "[TOPIC]").toString())
             .setPushConfig(PushConfig.newBuilder().build())
             .setBigqueryConfig(BigQueryConfig.newBuilder().build())
+            .setCloudStorageConfig(CloudStorageConfig.newBuilder().build())
             .setAckDeadlineSeconds(2135351438)
             .setRetainAckedMessages(true)
             .setMessageRetentionDuration(Duration.newBuilder().build())
@@ -131,6 +132,9 @@ public class SubscriptionAdminClientHttpJsonTest {
             .setDetached(true)
             .setEnableExactlyOnceDelivery(true)
             .setTopicMessageRetentionDuration(Duration.newBuilder().build())
+            .setAnalyticsHubSubscriptionInfo(
+                Subscription.AnalyticsHubSubscriptionInfo.newBuilder().build())
+            .addAllMessageTransforms(new ArrayList<MessageTransform>())
             .build();
     mockService.addResponse(expectedResponse);
 
@@ -185,6 +189,7 @@ public class SubscriptionAdminClientHttpJsonTest {
             .setTopic(TopicName.ofProjectTopicName("[PROJECT]", "[TOPIC]").toString())
             .setPushConfig(PushConfig.newBuilder().build())
             .setBigqueryConfig(BigQueryConfig.newBuilder().build())
+            .setCloudStorageConfig(CloudStorageConfig.newBuilder().build())
             .setAckDeadlineSeconds(2135351438)
             .setRetainAckedMessages(true)
             .setMessageRetentionDuration(Duration.newBuilder().build())
@@ -197,6 +202,9 @@ public class SubscriptionAdminClientHttpJsonTest {
             .setDetached(true)
             .setEnableExactlyOnceDelivery(true)
             .setTopicMessageRetentionDuration(Duration.newBuilder().build())
+            .setAnalyticsHubSubscriptionInfo(
+                Subscription.AnalyticsHubSubscriptionInfo.newBuilder().build())
+            .addAllMessageTransforms(new ArrayList<MessageTransform>())
             .build();
     mockService.addResponse(expectedResponse);
 
@@ -251,6 +259,7 @@ public class SubscriptionAdminClientHttpJsonTest {
             .setTopic(TopicName.ofProjectTopicName("[PROJECT]", "[TOPIC]").toString())
             .setPushConfig(PushConfig.newBuilder().build())
             .setBigqueryConfig(BigQueryConfig.newBuilder().build())
+            .setCloudStorageConfig(CloudStorageConfig.newBuilder().build())
             .setAckDeadlineSeconds(2135351438)
             .setRetainAckedMessages(true)
             .setMessageRetentionDuration(Duration.newBuilder().build())
@@ -263,6 +272,9 @@ public class SubscriptionAdminClientHttpJsonTest {
             .setDetached(true)
             .setEnableExactlyOnceDelivery(true)
             .setTopicMessageRetentionDuration(Duration.newBuilder().build())
+            .setAnalyticsHubSubscriptionInfo(
+                Subscription.AnalyticsHubSubscriptionInfo.newBuilder().build())
+            .addAllMessageTransforms(new ArrayList<MessageTransform>())
             .build();
     mockService.addResponse(expectedResponse);
 
@@ -317,6 +329,7 @@ public class SubscriptionAdminClientHttpJsonTest {
             .setTopic(TopicName.ofProjectTopicName("[PROJECT]", "[TOPIC]").toString())
             .setPushConfig(PushConfig.newBuilder().build())
             .setBigqueryConfig(BigQueryConfig.newBuilder().build())
+            .setCloudStorageConfig(CloudStorageConfig.newBuilder().build())
             .setAckDeadlineSeconds(2135351438)
             .setRetainAckedMessages(true)
             .setMessageRetentionDuration(Duration.newBuilder().build())
@@ -329,6 +342,9 @@ public class SubscriptionAdminClientHttpJsonTest {
             .setDetached(true)
             .setEnableExactlyOnceDelivery(true)
             .setTopicMessageRetentionDuration(Duration.newBuilder().build())
+            .setAnalyticsHubSubscriptionInfo(
+                Subscription.AnalyticsHubSubscriptionInfo.newBuilder().build())
+            .addAllMessageTransforms(new ArrayList<MessageTransform>())
             .build();
     mockService.addResponse(expectedResponse);
 
@@ -383,6 +399,7 @@ public class SubscriptionAdminClientHttpJsonTest {
             .setTopic(TopicName.ofProjectTopicName("[PROJECT]", "[TOPIC]").toString())
             .setPushConfig(PushConfig.newBuilder().build())
             .setBigqueryConfig(BigQueryConfig.newBuilder().build())
+            .setCloudStorageConfig(CloudStorageConfig.newBuilder().build())
             .setAckDeadlineSeconds(2135351438)
             .setRetainAckedMessages(true)
             .setMessageRetentionDuration(Duration.newBuilder().build())
@@ -395,6 +412,9 @@ public class SubscriptionAdminClientHttpJsonTest {
             .setDetached(true)
             .setEnableExactlyOnceDelivery(true)
             .setTopicMessageRetentionDuration(Duration.newBuilder().build())
+            .setAnalyticsHubSubscriptionInfo(
+                Subscription.AnalyticsHubSubscriptionInfo.newBuilder().build())
+            .addAllMessageTransforms(new ArrayList<MessageTransform>())
             .build();
     mockService.addResponse(expectedResponse);
 
@@ -442,6 +462,7 @@ public class SubscriptionAdminClientHttpJsonTest {
             .setTopic(TopicName.ofProjectTopicName("[PROJECT]", "[TOPIC]").toString())
             .setPushConfig(PushConfig.newBuilder().build())
             .setBigqueryConfig(BigQueryConfig.newBuilder().build())
+            .setCloudStorageConfig(CloudStorageConfig.newBuilder().build())
             .setAckDeadlineSeconds(2135351438)
             .setRetainAckedMessages(true)
             .setMessageRetentionDuration(Duration.newBuilder().build())
@@ -454,6 +475,9 @@ public class SubscriptionAdminClientHttpJsonTest {
             .setDetached(true)
             .setEnableExactlyOnceDelivery(true)
             .setTopicMessageRetentionDuration(Duration.newBuilder().build())
+            .setAnalyticsHubSubscriptionInfo(
+                Subscription.AnalyticsHubSubscriptionInfo.newBuilder().build())
+            .addAllMessageTransforms(new ArrayList<MessageTransform>())
             .build();
     mockService.addResponse(expectedResponse);
 
@@ -501,6 +525,7 @@ public class SubscriptionAdminClientHttpJsonTest {
             .setTopic(TopicName.ofProjectTopicName("[PROJECT]", "[TOPIC]").toString())
             .setPushConfig(PushConfig.newBuilder().build())
             .setBigqueryConfig(BigQueryConfig.newBuilder().build())
+            .setCloudStorageConfig(CloudStorageConfig.newBuilder().build())
             .setAckDeadlineSeconds(2135351438)
             .setRetainAckedMessages(true)
             .setMessageRetentionDuration(Duration.newBuilder().build())
@@ -513,34 +538,38 @@ public class SubscriptionAdminClientHttpJsonTest {
             .setDetached(true)
             .setEnableExactlyOnceDelivery(true)
             .setTopicMessageRetentionDuration(Duration.newBuilder().build())
+            .setAnalyticsHubSubscriptionInfo(
+                Subscription.AnalyticsHubSubscriptionInfo.newBuilder().build())
+            .addAllMessageTransforms(new ArrayList<MessageTransform>())
             .build();
     mockService.addResponse(expectedResponse);
 
-    UpdateSubscriptionRequest request =
-        UpdateSubscriptionRequest.newBuilder()
-            .setSubscription(
-                Subscription.newBuilder()
-                    .setName(SubscriptionName.of("[PROJECT]", "[SUBSCRIPTION]").toString())
-                    .setTopic(TopicName.ofProjectTopicName("[PROJECT]", "[TOPIC]").toString())
-                    .setPushConfig(PushConfig.newBuilder().build())
-                    .setBigqueryConfig(BigQueryConfig.newBuilder().build())
-                    .setAckDeadlineSeconds(2135351438)
-                    .setRetainAckedMessages(true)
-                    .setMessageRetentionDuration(Duration.newBuilder().build())
-                    .putAllLabels(new HashMap<String, String>())
-                    .setEnableMessageOrdering(true)
-                    .setExpirationPolicy(ExpirationPolicy.newBuilder().build())
-                    .setFilter("filter-1274492040")
-                    .setDeadLetterPolicy(DeadLetterPolicy.newBuilder().build())
-                    .setRetryPolicy(RetryPolicy.newBuilder().build())
-                    .setDetached(true)
-                    .setEnableExactlyOnceDelivery(true)
-                    .setTopicMessageRetentionDuration(Duration.newBuilder().build())
-                    .build())
-            .setUpdateMask(FieldMask.newBuilder().build())
+    Subscription subscription =
+        Subscription.newBuilder()
+            .setName(SubscriptionName.of("[PROJECT]", "[SUBSCRIPTION]").toString())
+            .setTopic(TopicName.ofProjectTopicName("[PROJECT]", "[TOPIC]").toString())
+            .setPushConfig(PushConfig.newBuilder().build())
+            .setBigqueryConfig(BigQueryConfig.newBuilder().build())
+            .setCloudStorageConfig(CloudStorageConfig.newBuilder().build())
+            .setAckDeadlineSeconds(2135351438)
+            .setRetainAckedMessages(true)
+            .setMessageRetentionDuration(Duration.newBuilder().build())
+            .putAllLabels(new HashMap<String, String>())
+            .setEnableMessageOrdering(true)
+            .setExpirationPolicy(ExpirationPolicy.newBuilder().build())
+            .setFilter("filter-1274492040")
+            .setDeadLetterPolicy(DeadLetterPolicy.newBuilder().build())
+            .setRetryPolicy(RetryPolicy.newBuilder().build())
+            .setDetached(true)
+            .setEnableExactlyOnceDelivery(true)
+            .setTopicMessageRetentionDuration(Duration.newBuilder().build())
+            .setAnalyticsHubSubscriptionInfo(
+                Subscription.AnalyticsHubSubscriptionInfo.newBuilder().build())
+            .addAllMessageTransforms(new ArrayList<MessageTransform>())
             .build();
+    FieldMask updateMask = FieldMask.newBuilder().build();
 
-    Subscription actualResponse = client.updateSubscription(request);
+    Subscription actualResponse = client.updateSubscription(subscription, updateMask);
     Assert.assertEquals(expectedResponse, actualResponse);
 
     List<String> actualRequests = mockService.getRequestPaths();
@@ -566,30 +595,31 @@ public class SubscriptionAdminClientHttpJsonTest {
     mockService.addException(exception);
 
     try {
-      UpdateSubscriptionRequest request =
-          UpdateSubscriptionRequest.newBuilder()
-              .setSubscription(
-                  Subscription.newBuilder()
-                      .setName(SubscriptionName.of("[PROJECT]", "[SUBSCRIPTION]").toString())
-                      .setTopic(TopicName.ofProjectTopicName("[PROJECT]", "[TOPIC]").toString())
-                      .setPushConfig(PushConfig.newBuilder().build())
-                      .setBigqueryConfig(BigQueryConfig.newBuilder().build())
-                      .setAckDeadlineSeconds(2135351438)
-                      .setRetainAckedMessages(true)
-                      .setMessageRetentionDuration(Duration.newBuilder().build())
-                      .putAllLabels(new HashMap<String, String>())
-                      .setEnableMessageOrdering(true)
-                      .setExpirationPolicy(ExpirationPolicy.newBuilder().build())
-                      .setFilter("filter-1274492040")
-                      .setDeadLetterPolicy(DeadLetterPolicy.newBuilder().build())
-                      .setRetryPolicy(RetryPolicy.newBuilder().build())
-                      .setDetached(true)
-                      .setEnableExactlyOnceDelivery(true)
-                      .setTopicMessageRetentionDuration(Duration.newBuilder().build())
-                      .build())
-              .setUpdateMask(FieldMask.newBuilder().build())
+      Subscription subscription =
+          Subscription.newBuilder()
+              .setName(SubscriptionName.of("[PROJECT]", "[SUBSCRIPTION]").toString())
+              .setTopic(TopicName.ofProjectTopicName("[PROJECT]", "[TOPIC]").toString())
+              .setPushConfig(PushConfig.newBuilder().build())
+              .setBigqueryConfig(BigQueryConfig.newBuilder().build())
+              .setCloudStorageConfig(CloudStorageConfig.newBuilder().build())
+              .setAckDeadlineSeconds(2135351438)
+              .setRetainAckedMessages(true)
+              .setMessageRetentionDuration(Duration.newBuilder().build())
+              .putAllLabels(new HashMap<String, String>())
+              .setEnableMessageOrdering(true)
+              .setExpirationPolicy(ExpirationPolicy.newBuilder().build())
+              .setFilter("filter-1274492040")
+              .setDeadLetterPolicy(DeadLetterPolicy.newBuilder().build())
+              .setRetryPolicy(RetryPolicy.newBuilder().build())
+              .setDetached(true)
+              .setEnableExactlyOnceDelivery(true)
+              .setTopicMessageRetentionDuration(Duration.newBuilder().build())
+              .setAnalyticsHubSubscriptionInfo(
+                  Subscription.AnalyticsHubSubscriptionInfo.newBuilder().build())
+              .addAllMessageTransforms(new ArrayList<MessageTransform>())
               .build();
-      client.updateSubscription(request);
+      FieldMask updateMask = FieldMask.newBuilder().build();
+      client.updateSubscription(subscription, updateMask);
       Assert.fail("No exception raised");
     } catch (InvalidArgumentException e) {
       // Expected exception.
@@ -1619,19 +1649,16 @@ public class SubscriptionAdminClientHttpJsonTest {
             .build();
     mockService.addResponse(expectedResponse);
 
-    UpdateSnapshotRequest request =
-        UpdateSnapshotRequest.newBuilder()
-            .setSnapshot(
-                Snapshot.newBuilder()
-                    .setName(SnapshotName.of("[PROJECT]", "[SNAPSHOT]").toString())
-                    .setTopic(TopicName.ofProjectTopicName("[PROJECT]", "[TOPIC]").toString())
-                    .setExpireTime(Timestamp.newBuilder().build())
-                    .putAllLabels(new HashMap<String, String>())
-                    .build())
-            .setUpdateMask(FieldMask.newBuilder().build())
+    Snapshot snapshot =
+        Snapshot.newBuilder()
+            .setName(SnapshotName.of("[PROJECT]", "[SNAPSHOT]").toString())
+            .setTopic(TopicName.ofProjectTopicName("[PROJECT]", "[TOPIC]").toString())
+            .setExpireTime(Timestamp.newBuilder().build())
+            .putAllLabels(new HashMap<String, String>())
             .build();
+    FieldMask updateMask = FieldMask.newBuilder().build();
 
-    Snapshot actualResponse = client.updateSnapshot(request);
+    Snapshot actualResponse = client.updateSnapshot(snapshot, updateMask);
     Assert.assertEquals(expectedResponse, actualResponse);
 
     List<String> actualRequests = mockService.getRequestPaths();
@@ -1657,18 +1684,15 @@ public class SubscriptionAdminClientHttpJsonTest {
     mockService.addException(exception);
 
     try {
-      UpdateSnapshotRequest request =
-          UpdateSnapshotRequest.newBuilder()
-              .setSnapshot(
-                  Snapshot.newBuilder()
-                      .setName(SnapshotName.of("[PROJECT]", "[SNAPSHOT]").toString())
-                      .setTopic(TopicName.ofProjectTopicName("[PROJECT]", "[TOPIC]").toString())
-                      .setExpireTime(Timestamp.newBuilder().build())
-                      .putAllLabels(new HashMap<String, String>())
-                      .build())
-              .setUpdateMask(FieldMask.newBuilder().build())
+      Snapshot snapshot =
+          Snapshot.newBuilder()
+              .setName(SnapshotName.of("[PROJECT]", "[SNAPSHOT]").toString())
+              .setTopic(TopicName.ofProjectTopicName("[PROJECT]", "[TOPIC]").toString())
+              .setExpireTime(Timestamp.newBuilder().build())
+              .putAllLabels(new HashMap<String, String>())
               .build();
-      client.updateSnapshot(request);
+      FieldMask updateMask = FieldMask.newBuilder().build();
+      client.updateSnapshot(snapshot, updateMask);
       Assert.fail("No exception raised");
     } catch (InvalidArgumentException e) {
       // Expected exception.
