@@ -10,7 +10,7 @@
   <parent>
     <groupId>com.google.cloud</groupId>
     <artifactId>google-cloud-pubsub-parent</artifactId>
-    <version>1.134.1</version><!-- {x-version-update:google-cloud-pubsub:current} -->
+    <version>1.134.1-STRIIM</version><!-- {x-version-update:google-cloud-pubsub:current} -->
   </parent>
   <dependencies>
     <dependency>

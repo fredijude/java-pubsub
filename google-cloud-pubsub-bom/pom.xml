@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-pubsub-bom</artifactId>
-  <version>1.134.1</version><!-- {x-version-update:google-cloud-pubsub:current} -->
+  <version>1.134.1-STRIIM</version><!-- {x-version-update:google-cloud-pubsub:current} -->
   <packaging>pom</packaging>
   <parent>
     <groupId>com.google.cloud</groupId>
@@ -52,7 +52,7 @@
       <dependency>
         <groupId>com.google.cloud</groupId>
         <artifactId>google-cloud-pubsub</artifactId>
-        <version>1.134.1</version><!-- {x-version-update:google-cloud-pubsub:current} -->
+        <version>1.134.1-STRIIM</version><!-- {x-version-update:google-cloud-pubsub:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.api.grpc</groupId>
